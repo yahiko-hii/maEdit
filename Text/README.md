@@ -3,6 +3,7 @@
 This program uses the ncurses library, which is licensed under the X11 License.
 
 Copyright (c) 1998-2023, 2024 Thomas E. Dickey
+
 Copyright (c) 2025 yahiko hi
 
 The ncurses library is provided under the X11 License (MIT License). For more details, see the LICENSE file in this distribution.
