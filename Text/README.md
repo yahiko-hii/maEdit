@@ -42,10 +42,7 @@ unlink /usr/local/bin/maedit
 
 ----
 
-ソースコードは商用、非商用に関わらず改変、再利用自由です
-
-メール
-contact.em@mainaddr.com
+メール: contact.em@mainaddr.com
 
 ----
 
