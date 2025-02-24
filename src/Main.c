@@ -873,7 +873,7 @@ int MainPrint(St_t* St){
 
 	char* text[] = {
 		(char*)"Move: Ⓦ or Ⓢ or Ⓐ or Ⓓ  Exit: Ctrl+Ⓔ",
-		(char*)"Add: Enter  Del: Ctrl+Ⓧ  Repl: Ⓡ",
+		(char*)"Edit: Enter  Del: Ctrl+Ⓧ  Repl: Ⓡ",
 		(char*)"Open: Ⓞ  Put: Ⓟ  List: 【 or 】 or Ⓛ",
 		NULL
 	};
