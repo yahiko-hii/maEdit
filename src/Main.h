@@ -73,10 +73,8 @@
 #define DF_RIGHT 'D'
 
 // Key
-#define DF_KEY 'K'
+#define DF_KEY '\n'
 
-// 改行
-#define DF_LF '\n'
 
 // 文字削除
 #define DF_DEL DF_CTRL_X
@@ -105,8 +103,8 @@ int MainFilePut(St_t* St);
 int MainWriteFile(St_t* St);
 int MainFileList(St_t* St);
 
-int MainLF(St_t* St);
 int MainAdd(St_t* St);
+int MainLF(St_t* St);
 int MainCharDel(St_t* St);
 int MainAs(St_t* St);
 char* MainGetStr(int, int, char*);
@@ -114,4 +112,3 @@ char* MainGetStr(int, int, char*);
 int MainPrint(St_t* St);
 
 #endif
-
