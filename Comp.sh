@@ -4,9 +4,9 @@ V_CUR_DIR=$(dirname "$(readlink -f "$0")");
 cd "${V_CUR_DIR}";
 
 # ソースディレクトリ
-if [ -d "${V_CUR_DIR}/Src/" ]
+if [ -d "${V_CUR_DIR}/src/" ]
 then
-	V_SRC_DIR="${V_CUR_DIR}/Src";
+	V_SRC_DIR="${V_CUR_DIR}/src";
 else
 	V_SRC_DIR="${V_CUR_DIR}";
 fi;
@@ -198,4 +198,3 @@ exit;
 
 # ヘッダ ファイルの場所
 # /usr/include/
-
