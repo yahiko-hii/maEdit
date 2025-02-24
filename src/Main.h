@@ -75,7 +75,6 @@
 // Key
 #define DF_KEY '\n'
 
-
 // 文字削除
 #define DF_DEL DF_CTRL_X
 
