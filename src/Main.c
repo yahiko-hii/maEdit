@@ -147,12 +147,6 @@ int MainKey(St_t* St){
 			}
 
 		}
-		//  改行
-		else if(c == DF_LF){
-			if(MainLF(St) < 0){
-				return -1;
-			}
-		}
 		//  文字削除
 		else if(c == DF_DEL){
 			if(MainCharDel(St) < 0){
@@ -254,7 +248,7 @@ int MainFileOpen(St_t* St){
 		if(ptr == NULL){
 			return -1;
 		}
-		else if(ptr[0] == '\0'){
+		else if(ptr[0] == '\0' || ptr[0] == '\n'){
 			return 0;
 		}
 
@@ -383,7 +377,7 @@ int MainFilePut(St_t* St){
 		if(ptr == NULL){
 			return -1;
 		}
-		else if(ptr[0] == '\0'){
+		else if(ptr[0] == '\0' || ptr[0] == '\n'){
 			return 0;
 		}
 
@@ -407,7 +401,7 @@ int MainFilePut(St_t* St){
 		}
 
 			// Yesでファイルへの書き込みへ
-		if(ptr[0] == '\0' || ArrCmp(ptr, (char*)"Y", 0) == 0){
+		if(ptr[0] == '\0' || ptr[0] == '\n' || ArrCmp(ptr, (char*)"Y", 0) == 0){
 			MainWriteFile(St);
 		}
 
@@ -480,6 +474,9 @@ int MainFileList(St_t* St){
 		if(ptr == NULL){
 			return -1;
 		}
+		else if(ptr[0] == '\0' || ptr[0] == '\n'){
+			return 1;
+		}
 
 		i = (int)strtol(ptr, NULL, 10);
 		if(i >= 0 && i < fls){
@@ -492,29 +489,6 @@ int MainFileList(St_t* St){
 		if(fls > St->Dat.IntDig){
 			St->Dat.IntDig = fls;
 		}
-
-	return 0;
-}
-
-// 改行
-int MainLF(St_t* St){
-
-	int len;
-
-		len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]) - St->Pos.DatX;
-
-		St->File.Dat = CpppAllocAddPp(St->Pos.FileNum, St->Pos.DatY + 1, len);
-		if(St->File.Dat == NULL){
-			return -1;
-		}
-
-		strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1], &St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX], len);
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1][len] = '\0';
-
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX] = '\0';
-
-		St->Pos.DatY = St->Pos.DatY + 1;
-		St->Pos.DatX = 0;
 
 	return 0;
 }
@@ -534,6 +508,13 @@ int MainAdd(St_t* St){
 			str = MainGetStr(0, 1, (char*)"\0");
 			if(str == NULL){
 				return -1;
+			}
+			//  改行
+			else if(str[0] == '\n'){
+				if(MainLF(St) < 0){
+					return -1;
+				}
+				return 0;
 			}
 			else if(str[0] == '\0'){
 				return 0;
@@ -580,6 +561,29 @@ int MainAdd(St_t* St){
 
 			// カーソルの位置を変更
 			St->Pos.DatX = St->Pos.DatX + str_len;
+
+	return 0;
+}
+
+// 改行
+int MainLF(St_t* St){
+
+	int len;
+
+		len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]) - St->Pos.DatX;
+
+		St->File.Dat = CpppAllocAddPp(St->Pos.FileNum, St->Pos.DatY + 1, len);
+		if(St->File.Dat == NULL){
+			return -1;
+		}
+
+		strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1], &St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX], len);
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1][len] = '\0';
+
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX] = '\0';
+
+		St->Pos.DatY = St->Pos.DatY + 1;
+		St->Pos.DatX = 0;
 
 	return 0;
 }
@@ -684,7 +688,7 @@ int MainAs(St_t* St){
 		if(ptr == NULL){
 			return -1;
 		}
-		else if(ptr[0] == '\0'){
+		else if(ptr[0] == '\0' || ptr[0] == '\n'){
 			return 0;
 		}
 		ls0_len = (int)strlen(ptr);
@@ -707,7 +711,7 @@ int MainAs(St_t* St){
 			CppAllocExit();
 			return -1;
 		}
-		else if(ptr[0] == '\0'){
+		else if(ptr[0] == '\0' || ptr[0] == '\n'){
 			ptr[0] = '\0';
 			ls1_len = 0;
 		}
@@ -734,7 +738,7 @@ int MainAs(St_t* St){
 			return -1;
 		}
 		// yなら区別しない
-		if(ptr[0] == '\0' || ArrCmp(ptr, (char*)"Y", 0) == 0){
+		if(ptr[0] == '\0' || ptr[0] == '\n' || ArrCmp(ptr, (char*)"Y", 0) == 0){
 			al = 0;
 		}
 		else{
@@ -830,7 +834,14 @@ char* MainGetStr(int y, int x, char* arg){
 
 			c = (char)Nckey();
 
-			if(c == EOF || c == '\n'){
+			if(c == EOF){
+				break;
+			}
+			else if(c == '\n'){
+				if(pos == 0){
+					ptr[0] = '\n';
+					ptr[1] = '\0';
+				}
 				break;
 			}
 			//  文字削除
@@ -861,9 +872,9 @@ char* MainGetStr(int y, int x, char* arg){
 int MainPrint(St_t* St){
 
 	char* text[] = {
-		(char*)"Move: Ⓦ or Ⓢ or Ⓐ or Ⓓ Exit: Ctrl+Ⓔ",
-		(char*)"Add: Ⓚ Del: Ctrl+Ⓧ Repl: Ⓡ",
-		(char*)"Open: Ⓞ Put: Ⓟ List: 【 or 】 or Ⓛ",
+		(char*)"Move: Ⓦ or Ⓢ or Ⓐ or Ⓓ  Exit: Ctrl+Ⓔ",
+		(char*)"Add: ⏎  Del: Ctrl+Ⓧ  Repl: Ⓡ",
+		(char*)"Open: Ⓞ  Put: Ⓟ  List: 【 or 】 or Ⓛ",
 		NULL
 	};
 	int i;
@@ -981,4 +992,3 @@ int MainPrint(St_t* St){
 
 	return 0;
 }
-
