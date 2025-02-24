@@ -74,7 +74,7 @@ V_OP_ETS='.out';
 # アセンブリコードで出力するかのフラグ -asmを付けてこのスクリプトを実行する
 V_OP_ASM='0';
 
-mkdir -p "${V_CUR_DIR}/Tmp/o";
+mkdir -p "${V_CUR_DIR}/tmp/o";
 
 ####
 # チェック
@@ -137,7 +137,7 @@ do
 	elif [ "${V_A}" = '-asm' ]
 	then
 		V_OP_ASM='1';
-		mkdir -p "${V_CUR_DIR}/Tmp/s";
+		mkdir -p "${V_CUR_DIR}/tmp/s";
 	fi;
 
 done;
@@ -155,21 +155,21 @@ do
 	then
 
 		# .oファイルが存在しないもしくはタイムスタンプが違う
-		if [ ! -e ${V_CUR_DIR}/Tmp/o/${V_FN}.o ] ||
-			[ ${V_A} -nt ${V_CUR_DIR}/Tmp/o/${V_FN}.o ] ||
-			[ ${V_SRC_DIR}/${V_FN}.h -nt ${V_CUR_DIR}/Tmp/o/${V_FN}.o ]
+		if [ ! -e ${V_CUR_DIR}/tmp/o/${V_FN}.o ] ||
+			[ ${V_A} -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ] ||
+			[ ${V_SRC_DIR}/${V_FN}.h -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ]
 		then
 
-			echo "${V_CUR_DIR}/Tmp/o/${V_FN}.o";
-			${V_COMP} -c "${V_A}" -o "${V_CUR_DIR}/Tmp/o/${V_FN}.o";
+			echo "${V_CUR_DIR}/tmp/o/${V_FN}.o";
+			${V_COMP} -c "${V_A}" -o "${V_CUR_DIR}/tmp/o/${V_FN}.o";
 
-			touch ${V_A} ${V_SRC_DIR}/${V_FN}.h "${V_CUR_DIR}/Tmp/o/${V_FN}.o";
+			touch ${V_A} ${V_SRC_DIR}/${V_FN}.h "${V_CUR_DIR}/tmp/o/${V_FN}.o";
 
 		fi;
 
 	else
-		echo "${V_CUR_DIR}/Tmp/s/${V_FN}.s";
-		${V_COMP} -S "${V_A}" -o "${V_CUR_DIR}/Tmp/s/${V_FN}.s";
+		echo "${V_CUR_DIR}/tmp/s/${V_FN}.s";
+		${V_COMP} -S "${V_A}" -o "${V_CUR_DIR}/tmp/s/${V_FN}.s";
 	fi;
 
 done;
@@ -177,8 +177,8 @@ done;
 if [ ${V_OP_ASM} = '0' ]
 then
 	echo "\n----\nlink\n";
-	echo "${V_COMP} ${V_CUR_DIR}/Tmp/o/*.o -o ${V_OP_DIR}/${V_OP_FN}${V_OP_ETS} ${V_FLAGS}";
-	${V_COMP} "${V_CUR_DIR}/Tmp/o/"*".o" -o "${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}" ${V_FLAGS};
+	echo "${V_COMP} ${V_CUR_DIR}/tmp/o/*.o -o ${V_OP_DIR}/${V_OP_FN}${V_OP_ETS} ${V_FLAGS}";
+	${V_COMP} "${V_CUR_DIR}/tmp/o/"*".o" -o "${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}" ${V_FLAGS};
 fi;
 
 #####
