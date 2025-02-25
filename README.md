@@ -42,7 +42,8 @@ unlink /usr/local/bin/maedit
 
 ----
 
-メール: contact.em@mainaddr.com
+メール
+contact.em@mainaddr.com
 
 ----
 
@@ -95,4 +96,8 @@ MainInitの変数rが未定義の状態で比較していたので修正
 2025/02/24
 ncursesのライセンスに合わせて変更
 
+2025/02/26
+細かい変更
+
 ----
+
