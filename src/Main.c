@@ -99,15 +99,14 @@ int MainKey(St_t* St){
 	int i;
 
 		c = Nckey();
+		c = toupper(c);
 
 		// EXIT
 		if(c == DF_EXIT){
 				return 1;
 		}
-
-		c = toupper(c);
 		// UP
-		if((c == DF_UP || c == DF_ARR_UP) && St->Pos.DatY > 1){
+		else if((c == DF_UP || c == DF_ARR_UP) && St->Pos.DatY > 1){
 			St->Pos.DatY = St->Pos.DatY - 1;
 			y = 1;
 		}
@@ -208,7 +207,7 @@ int MainKey(St_t* St){
 			}
 		}
 		// キー入力
-		else if(c == DF_KEY){
+		else if(c == DF_IP){
 			// 出力されている文字をスペースで上書き
 			NcPrintOw(0, 0, (int)strlen(St->File.Dat[St->Pos.FileNum][0]));
 			if(MainAdd(St) != 0){
@@ -872,9 +871,8 @@ char* MainGetStr(int y, int x, char* arg){
 int MainPrint(St_t* St){
 
 	char* text[] = {
-		(char*)"Move: Ⓦ or Ⓢ or Ⓐ or Ⓓ  Exit: Ctrl+Ⓔ",
-		(char*)"Edit: Enter  Del: Ctrl+Ⓧ  Repl: Ⓡ",
-		(char*)"Open: Ⓞ  Put: Ⓟ  List: 【 or 】 or Ⓛ",
+		(char*)"Move:W or S or A or D, Exit:E,　Edit:Enter, Del:Ctrl+X, Repl:R,",
+		(char*)"Open:O, Put:P, List:[ or ] or L,",
 		NULL
 	};
 	int i;

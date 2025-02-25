@@ -58,7 +58,7 @@
 // キー設定
 
 // Exit
-#define DF_EXIT DF_CTRL_E
+#define DF_EXIT 'E'
 
 // ↑
 #define DF_UP 'W'
@@ -72,8 +72,8 @@
 // →
 #define DF_RIGHT 'D'
 
-// Key
-#define DF_KEY '\n'
+// Key Input
+#define DF_IP '\n'
 
 // 文字削除
 #define DF_DEL DF_CTRL_X
