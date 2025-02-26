@@ -99,17 +99,6 @@ FuncCheck(){
 	return 0;
 };
 
-# GLFW?
-#FuncCheck \
-#"glfw[0-9].h" "${V_COMP}" "${V_SRC_EXT}" \
-#"-Wextra -Werror -lGLEW -lGLU -lGL -lglfw" \
-#"${V_OP_ETS}";
-
-# GTK?
-#FuncCheck "gtk.h" "${V_COMP}" "${V_SRC_EXT}" \
-#"$(pkg-config --cflags gtk4) $(pkg-config --libs gtk4)" \
-#"${V_OP_ETS}";
-
 # ncurses?
 FuncCheck 'ncurses.h' "${V_COMP}" "${V_SRC_EXT}" \
 "${V_FLAGS} -lncursesw" \
