@@ -83,7 +83,7 @@ mkdir -p "${V_CUR_DIR}/tmp/o";
 mkdir -p /tmp/$$/;
 cat "${V_SRC_DIR}/"*"${V_SRC_EXT}" > /tmp/$$/srcall.txt;
 
-# 引数2の.hが存在したら変更
+# 引数の.hが存在したら変更
 FuncCheck(){
 
 	grep -i "${1}" /tmp/$$/srcall.txt > /tmp/$$/grep.txt;
