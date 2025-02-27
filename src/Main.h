@@ -2,6 +2,7 @@
 #define IG_MAIN
 
 #include "./St.h"
+#include "./CurDir.h"
 #include "./Reedfile.h"
 #include "./CpAlloc.h"
 #include "./CppAlloc.h"
@@ -97,7 +98,7 @@ int MainInit(St_t* St, int, char**);
 int MainKey(St_t* St);
 
 int MainFileOpen(St_t* St);
-int MainReedFile(St_t* St, char*);
+int MainReedFile(St_t* St, char*, int);
 int MainFilePut(St_t* St);
 int MainWriteFile(St_t* St);
 int MainFileList(St_t* St);

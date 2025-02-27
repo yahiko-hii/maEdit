@@ -45,9 +45,14 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		NcInit(St);
 
+		St->Dat.Cd = CurDir(argc, argv);
+		if(St->Dat.Cd == NULL){
+			return -1;
+		}
+
 		St->Dat.IntDig = 2;
 		St->Key.CurLen = (int)strlen(DF_CUR);
-		St->Key.Etlen = (int)strlen(DF_EOL);
+		St->Key.EolLen = (int)strlen(DF_EOL);
 
 		St->File.Dat = NULL;
 
@@ -55,7 +60,7 @@ int MainInit(St_t* St, int argc, char** argv){
 		// 引数で渡されたファイルを開く
 		for(i = 1; i < argc; i++){
 
-			r = MainReedFile(St, argv[i]);
+			r = MainReedFile(St, argv[i], i - 1);
 			if(r < 0){
 				break;
 			}
@@ -70,11 +75,13 @@ int MainInit(St_t* St, int argc, char** argv){
 		// ファイルが開けなかった場合、ファイル名のy0と空行y1のメモリを確保しておく
 		if(St->File.Dat == NULL){
 
-			St->File.Dat = CpppAlloc(0, 0, 1);
+			i = (int)strlen(St->Dat.Cd);
+			St->File.Dat = CpppAlloc(0, 0, i);
 			if(St->File.Dat == NULL){
 				return -1;
 			}
-			St->File.Dat[0][0][0] = '\0';
+			strncpy(St->File.Dat[0][0], St->Dat.Cd, i);
+			St->File.Dat[0][0][i] = '\0';
 
 			St->File.Dat = CpppAlloc(0, 1, 1);
 			if(St->File.Dat == NULL){
@@ -238,6 +245,7 @@ int MainFileOpen(St_t* St){
 
 	char* ptr;
 	int r;
+	int pos;
 
 		NcClear();
 
@@ -251,36 +259,14 @@ int MainFileOpen(St_t* St){
 			return 0;
 		}
 
-		//ファイルを開く
-		r = MainReedFile(St, ptr);
-		ReedfileExit();
-		if(r < 0){
-			return -1;
-		}
-
-	return 0;
-}
-
-// ファイルから読み込み
-int MainReedFile(St_t* St, char* fname){
-
-	char* ptr;
-	int pos;
-	int line;
-
-		ptr = Reedfile(fname, INT_MAX);
-		if(ptr == NULL){
-			return 1;
-		}
-
 		if(St->File.Dat == NULL){
-			St->Pos.FileNum = 0;
+			pos = 0;
 		}
 		else{
 
 			// 既に開いているファイルのリストと比較
 			for(pos = 0; St->File.Dat[pos] != NULL; pos++){
-				if(strcmp(fname, St->File.Dat[pos][0]) == 0){
+				if(strcmp(ptr, St->File.Dat[pos][0]) == 0){
 					pos = -1;
 					break;
 				}
@@ -290,9 +276,30 @@ int MainReedFile(St_t* St, char* fname){
 				return 1;
 			}
 
-			St->Pos.FileNum = pos;
-
 		}
+
+		//ファイルを開く
+		r = MainReedFile(St, ptr, pos);
+		ReedfileExit();
+		if(r < 0){
+			return -1;
+		}
+
+	return 0;
+}
+
+// ファイルから読み込み
+int MainReedFile(St_t* St, char* fname, int pos){
+
+	char* ptr;
+	int line;
+
+		ptr = Reedfile(fname, INT_MAX);
+		if(ptr == NULL){
+			return 1;
+		}
+
+		St->Pos.FileNum = pos;
 
 		// St->File.Dat[St->Pos.FileNum]のline 0にファイル名を収納
 		pos = (int)strlen(fname);
@@ -923,7 +930,7 @@ int MainPrint(St_t* St){
 
 			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
 			// 確保されているメモリ < 指定された長さならメモリが再確保される。
-			ptr = CpAlloc(len + St->Key.CurLen + St->Key.Etlen);
+			ptr = CpAlloc(len + St->Key.CurLen + St->Key.EolLen);
 			if(ptr == NULL){
 				break;
 			}
@@ -938,12 +945,12 @@ int MainPrint(St_t* St){
 					DF_EOL
 				);
 
-				len = len + St->Key.CurLen + St->Key.Etlen;
+				len = len + St->Key.CurLen + St->Key.EolLen;
 
 			}
 			else{
 				sprintf(ptr, "%s%s", St->File.Dat[St->Pos.FileNum][i], DF_EOL);
-				len = len + St->Key.Etlen;
+				len = len + St->Key.EolLen;
 			}
 
 			// CRのポイントで改行しつつ出力

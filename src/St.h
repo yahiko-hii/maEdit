@@ -12,13 +12,14 @@ struct ST_POS{
 };
 struct ST_KEY{
 	int CurLen;
-	int Etlen;
+	int EolLen;
 };
 struct ST_FILE{
 	char*** Dat;
 };
 struct ST_DAT{
 	int IntDig;
+	char* Cd;
 };
 struct ST{
 	struct ST_POS Pos;
