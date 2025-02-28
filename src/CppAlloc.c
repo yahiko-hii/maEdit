@@ -57,7 +57,7 @@ static short int CppAlloc0(int pos){
 			return 0;
 		}
 
-		// posが最後の位置かどうか
+		// 最後の位置より前か後か
 		for(alloc_size = 0; Sg_CppAlloc[alloc_size] != NULL; alloc_size++);
 		if(pos < alloc_size){
 			return 0;

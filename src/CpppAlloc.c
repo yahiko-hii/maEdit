@@ -64,7 +64,7 @@ static short int CpppAlloc0(int pos0){
 			return 0;
 		}
 
-		// pos0が最後の位置かどうか
+		// 最後の位置より前か後か
 		for(alloc_size = 0; Sg_CpppAlloc[alloc_size] != NULL; alloc_size++);
 		if(pos0 < alloc_size){
 			return 0;
@@ -110,7 +110,7 @@ static short int CpppAlloc1(int pos0, int pos1){
 			return 0;
 		}
 
-		// pos1が最後の位置かどうか
+		// 最後の位置より前か後か
 		for(alloc_size = 0; Sg_CpppAlloc[pos0][alloc_size] != NULL; alloc_size++);
 		if(pos1 < alloc_size){
 			return 0;
