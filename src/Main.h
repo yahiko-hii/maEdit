@@ -17,18 +17,6 @@
 #define DF_TOP -2
 #define DF_BOTTOM 8
 
-// カーソル
-#define DF_CUR "┃"
-
-// End Of Line
-#define DF_EOL "␃"
-
-// 区切り
-#define DF_DM "│"
-
-// グループ分離
-#define DF_GS "─"
-
 // Linux ターミナル、Windows コマンドプロンプト 両方で取得出来るキー
 #define DF_CTRL_B 2
 #define DF_CTRL_E 5

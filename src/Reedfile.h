@@ -1,4 +1,4 @@
-#ifndef IG_REEDFILE
+﻿#ifndef IG_REEDFILE
 #define IG_REEDFILE
 
 char* Reedfile(char*, int);

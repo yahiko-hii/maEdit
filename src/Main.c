@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -40,7 +40,6 @@ int main(int argc, char* argv[]){
 int MainInit(St_t* St, int argc, char** argv){
 
 	int i;
-	char* ptr;
 	int r;
 
 		NcInit(St);
@@ -51,8 +50,14 @@ int MainInit(St_t* St, int argc, char** argv){
 		}
 
 		St->Dat.IntDig = 2;
-		St->Key.CurLen = (int)strlen(DF_CUR);
-		St->Key.EolLen = (int)strlen(DF_EOL);
+
+		St->C.Cur = (char*)"┃";
+		St->C.Eol = (char*)"␃";
+		St->C.Dm = (char*)"│";
+		St->C.Gs = (char*)"─";
+
+		St->Key.CurLen = (int)strlen(St->C.Cur);
+		St->Key.EolLen = (int)strlen(St->C.Eol);
 
 		St->File.Dat = NULL;
 
@@ -535,8 +540,12 @@ int MainAdd(St_t* St){
 				dat_len = 0;
 			}
 
+			if (INT_MAX - dat_len <= str_len) {
+				return -1;
+			}
 			all_len = str_len + dat_len;
-			buf = (char*)malloc(sizeof(char) * (all_len + 1));
+
+			buf = (char*)malloc(sizeof(char) * all_len + 1);
 			if(buf == NULL){
 				return -1;
 			}
@@ -603,7 +612,6 @@ int MainCharDel(St_t* St){
 	int pos0;
 	int pos1;
 	int diff;
-	char* ptr;
 
 		if(St->Pos.DatX > 0){
 
@@ -675,10 +683,9 @@ int MainAs(St_t* St){
 	int all_len;
 	int pos;
 
-	int al;
+	short int al;
 
 	int y;
-	int x;
 
 	int i = 0;
 
@@ -862,7 +869,7 @@ char* MainGetStr(int y, int x, char* arg){
 					break;
 				}
 
-				ptr[pos] = c;
+				ptr[pos] = (char)c;
 				pos = pos + 1;
 				ptr[pos] = '\0';
 
@@ -892,6 +899,7 @@ int MainPrint(St_t* St){
 
 	char* ptr;
 	int len;
+	int all_len;
 	int cr = 0;
 
 		NcClear();
@@ -910,7 +918,7 @@ int MainPrint(St_t* St){
 		NcPrintStr(put_y, put_x, St->File.Dat[St->Pos.FileNum][0], 0);
 		put_y = put_y + 1;
 		for(i = 0; i < St->Pos.MaxX; i++){
-			NcPrintStr(put_y, i, (char*)DF_GS, 0);
+			NcPrintStr(put_y, i, (char*)St->C.Gs, 0);
 		}
 		put_y = put_y + 1;
 
@@ -925,12 +933,17 @@ int MainPrint(St_t* St){
 			// 行番号
 			NcPrintInt(put_y, put_x, i, St->Dat.IntDig);
 			put_x = St->Dat.IntDig;
-			NcPrintStr(put_y, put_x, (char*)DF_DM, 0);
+			NcPrintStr(put_y, put_x, (char*)St->C.Dm, 0);
 			put_x = put_x + 2;
 
 			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
+
+			if ((INT_MAX - len) <= (St->Key.CurLen + St->Key.EolLen)) {
+				break;
+			}
+			all_len = len + St->Key.CurLen + St->Key.EolLen;
 			// 確保されているメモリ < 指定された長さならメモリが再確保される。
-			ptr = CpAlloc(len + St->Key.CurLen + St->Key.EolLen);
+			ptr = CpAlloc(all_len);
 			if(ptr == NULL){
 				break;
 			}
@@ -940,16 +953,16 @@ int MainPrint(St_t* St){
 
 				sprintf(ptr, "%.*s%s%s%s",
 					St->Pos.DatX, St->File.Dat[St->Pos.FileNum][i],
-					DF_CUR,
+					St->C.Cur,
 					&St->File.Dat[St->Pos.FileNum][i][St->Pos.DatX],
-					DF_EOL
+					St->C.Eol
 				);
 
 				len = len + St->Key.CurLen + St->Key.EolLen;
 
 			}
 			else{
-				sprintf(ptr, "%s%s", St->File.Dat[St->Pos.FileNum][i], DF_EOL);
+				sprintf(ptr, "%s%s", St->File.Dat[St->Pos.FileNum][i], St->C.Eol);
 				len = len + St->Key.EolLen;
 			}
 
@@ -988,7 +1001,7 @@ int MainPrint(St_t* St){
 		put_x = 0;
 		// 区切りと説明テキストを出力
 		for(i = 0; i < St->Pos.MaxX; i++){
-			NcPrintStr(put_y, i, (char*)DF_GS, 0);
+			NcPrintStr(put_y, i, (char*)St->C.Gs, 0);
 		}
 		for(i = 0; text[i] != NULL; i++){
 			put_y = put_y + 1;

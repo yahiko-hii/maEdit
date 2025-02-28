@@ -1,4 +1,4 @@
-// 数字の桁数を調べる
+﻿// 数字の桁数を調べる
 int NumbDgt(unsigned int Num){
 
 	int dgt = 0;

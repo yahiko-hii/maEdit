@@ -1,4 +1,4 @@
-//標準以外のライブラリの使用ファイル
+﻿//標準以外のライブラリの使用ファイル
 
 /*
 // マクロ
@@ -10,13 +10,13 @@ __MINGW32__
 __MINGW64__
 */
 
-//#ifdef _WIN64
-//	#include <pdcurses.h>
-//#elif __MINGW64_
-//	#include <pdcurses.h>
-//#else
+#ifdef _WIN64
+	#include <curses.h>
+#elif __MINGW64_
+	#include <curses.h>
+#else
 	#include <ncurses.h>
-//#endif
+#endif
 
 #include <stdlib.h>
 #include <locale.h>
@@ -26,8 +26,6 @@ __MINGW64__
 int NcInit(St_t* St){
 
 	static short int state = 0;
-	int y;
-	int x;
 
 		// 終了時の関数を登録
 		if(state == 0){

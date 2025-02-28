@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <threads.h>
@@ -18,7 +18,7 @@ char* CurDir(int argc, char** argv){
 		}
 
 		// argvが空か長さが0
-		if(argv[0] == NULL || argv[0][0] == '\0'){
+		if(argc < 1 || argv[0] == NULL || argv[0][0] == '\0'){
 
 			if(CurDirAlloc(3) != 0){
 				return NULL;

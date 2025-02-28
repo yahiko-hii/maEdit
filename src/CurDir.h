@@ -1,4 +1,4 @@
-#ifndef IG_CURDIR
+﻿#ifndef IG_CURDIR
 #define IG_CURDIR
 
 char* CurDir(int, char**);

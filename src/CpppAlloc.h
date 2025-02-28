@@ -1,4 +1,4 @@
-#ifndef IG_CPPPALLOC
+﻿#ifndef IG_CPPPALLOC
 #define IG_CPPPALLOC
 
 char*** CpppAlloc(int, int, int);

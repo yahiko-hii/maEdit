@@ -1,4 +1,4 @@
-#ifndef IG_ARR
+﻿#ifndef IG_ARR
 #define IG_ARR
 
 char* ArrSrch(char*, char*, short int);

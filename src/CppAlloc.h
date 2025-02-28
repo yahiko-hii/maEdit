@@ -1,4 +1,4 @@
-#ifndef IG_CPPALLOC
+﻿#ifndef IG_CPPALLOC
 #define IG_CPPALLOC
 
 char** CppAlloc(int, int);

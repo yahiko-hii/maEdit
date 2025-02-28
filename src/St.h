@@ -10,6 +10,12 @@ struct ST_POS{
 	int MaxY;
 	int MaxX;
 };
+struct ST_C{
+	char* Cur;
+	char* Eol;
+	char* Dm;
+	char* Gs;
+};
 struct ST_KEY{
 	int CurLen;
 	int EolLen;
@@ -23,6 +29,7 @@ struct ST_DAT{
 };
 struct ST{
 	struct ST_POS Pos;
+	struct ST_C C;
 	struct ST_KEY Key;
 	struct ST_FILE File;
 	struct ST_DAT Dat;

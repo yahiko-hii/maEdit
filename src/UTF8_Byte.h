@@ -1,4 +1,4 @@
-#ifndef IG_UTF8_BYTE
+﻿#ifndef IG_UTF8_BYTE
 #define IG_UTF8_BYTE
 
 short int UTF8_Byte(char*, int);

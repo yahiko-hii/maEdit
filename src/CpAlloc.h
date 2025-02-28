@@ -1,4 +1,4 @@
-#ifndef IG_CPALLOC
+﻿#ifndef IG_CPALLOC
 #define IG_CPALLOC
 
 char* CpAlloc(size_t);
