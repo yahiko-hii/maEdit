@@ -15,7 +15,7 @@ TUI(テキストユーザインタフェース)のエディタです
 
 ----
 
-# コンパイラとncursesのインストール
+# compiler
 
 # Debian系
 apt install -y gcc g++ clang libncurses-dev;
