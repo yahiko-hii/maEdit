@@ -51,10 +51,10 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		St->Dat.IntDig = 2;
 
-		St->C.Cur = (char*)"┃";
-		St->C.Eol = (char*)"␃";
-		St->C.Dm = (char*)"│";
-		St->C.Gs = (char*)"─";
+		St->C.Cur = (char*)"|";
+		St->C.Eol = (char*)"\0";
+		St->C.Dm = (char*)"| ";
+		St->C.Gs = (char*)"-";
 
 		St->Key.CurLen = (int)strlen(St->C.Cur);
 		St->Key.EolLen = (int)strlen(St->C.Eol);
