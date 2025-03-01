@@ -17,28 +17,27 @@ TUI(テキストユーザインタフェース)のエディタです
 
 # compiler
 
-# Debian系
+# Debian
 apt install -y gcc g++ clang libncurses-dev;
 
-# Red Hat系
+# Red Hat
 yum -y install gcc;
 yum -y install ncurses-devel;
 
-# コンパイルを実行
-sh ./Comp.sh
+# compile
+sh ./comp.sh
 
-./Comp.shのディレクトリにファイルを作成されます
-.out
+./comp.shのディレクトリに.outファイルを作成されます
 
 ----
 
-# 削除
-
-ディレクトリを削除
-./maEdit
+# rm
 
 # シンボリックリンクを作成していたら削除
 unlink /usr/local/bin/maedit
+
+# ディレクトリを削除
+rm -r -f ./maEdit
 
 ----
 
@@ -100,4 +99,3 @@ ncursesのライセンスに合わせて変更
 細かい変更
 
 ----
-
