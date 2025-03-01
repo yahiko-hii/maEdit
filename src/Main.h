@@ -14,8 +14,8 @@
 #include "./Nc.h"
 
 // 出力開始位置
-#define DF_TOP -2
-#define DF_BOTTOM 8
+#define DF_TOP -4
+#define DF_BOTTOM 12
 
 // Linux ターミナル、Windows コマンドプロンプト 両方で取得出来るキー
 #define DF_CTRL_B 2
@@ -78,8 +78,8 @@
 #define DF_PUT 'P'
 
 //ファイルの切り替え
-#define DF_FILE_UP '['
-#define DF_FILE_DOWND ']'
+#define DF_FILE_UP ' '
+#define DF_FILE_DOWND 'C'
 
 int main(int, char**);
 int MainInit(St_t* St, int, char**);

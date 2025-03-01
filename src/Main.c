@@ -59,6 +59,10 @@ int MainInit(St_t* St, int argc, char** argv){
 		St->Key.CurLen = (int)strlen(St->C.Cur);
 		St->Key.EolLen = (int)strlen(St->C.Eol);
 
+		if(St->Pos.MaxX > 8){
+			St->Pos.MaxX = (int)(St->Pos.MaxX * 0.9);
+		}
+
 		St->File.Dat = NULL;
 
 		r = 0;
@@ -540,7 +544,7 @@ int MainAdd(St_t* St){
 				dat_len = 0;
 			}
 
-			if (INT_MAX - dat_len <= str_len) {
+			if(INT_MAX - dat_len <= str_len){
 				return -1;
 			}
 			all_len = str_len + dat_len;
@@ -886,7 +890,7 @@ int MainPrint(St_t* St){
 
 	char* text[] = {
 		(char*)"Move:W or S or A or D, Exit:E,　Edit:Enter, Del:Ctrl+X, Repl:R,",
-		(char*)"Open:O, Put:P, List:[ or ] or L,",
+		(char*)"Open:O, Put:P, Switch:Space or C, List:L,",
 		NULL
 	};
 	int i;
@@ -938,7 +942,7 @@ int MainPrint(St_t* St){
 
 			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
 
-			if ((INT_MAX - len) <= (St->Key.CurLen + St->Key.EolLen)) {
+			if((INT_MAX - len) <= (St->Key.CurLen + St->Key.EolLen)){
 				break;
 			}
 			all_len = len + St->Key.CurLen + St->Key.EolLen;
