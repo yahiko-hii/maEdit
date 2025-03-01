@@ -88,7 +88,7 @@ int MainKey(St_t* St);
 int MainFileOpen(St_t* St);
 int MainReedFile(St_t* St, char*, int);
 int MainFilePut(St_t* St);
-int MainWriteFile(St_t* St);
+int MainWriteFile(St_t* St, char*);
 int MainFileList(St_t* St);
 
 int MainAdd(St_t* St);

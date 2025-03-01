@@ -41,6 +41,7 @@ int MainInit(St_t* St, int argc, char** argv){
 
 	int i;
 	int r;
+	char* nf = (char*)"untitled";
 
 		NcInit(St);
 
@@ -84,12 +85,12 @@ int MainInit(St_t* St, int argc, char** argv){
 		// ファイルが開けなかった場合、ファイル名のy0と空行y1のメモリを確保しておく
 		if(St->File.Dat == NULL){
 
-			i = (int)strlen(St->Dat.Cd);
+			i = (int)(strlen(St->Dat.Cd) + strlen(nf));
 			St->File.Dat = CpppAlloc(0, 0, i);
 			if(St->File.Dat == NULL){
 				return -1;
 			}
-			strncpy(St->File.Dat[0][0], St->Dat.Cd, i);
+			sprintf(St->File.Dat[0][0], "%s%s", St->Dat.Cd, nf);
 			St->File.Dat[0][0][i] = '\0';
 
 			St->File.Dat = CpppAlloc(0, 1, 1);
@@ -304,7 +305,7 @@ int MainReedFile(St_t* St, char* fname, int pos){
 	int line;
 
 		ptr = Reedfile(fname, INT_MAX);
-		if(ptr == NULL){
+		if(ptr == NULL || ptr[0] == '\0'){
 			return 1;
 		}
 
@@ -380,6 +381,7 @@ int MainFilePut(St_t* St){
 
 	char* ptr;
 	int len;
+	char c;
 
 		NcClear();
 
@@ -396,6 +398,20 @@ int MainFilePut(St_t* St){
 			return 0;
 		}
 
+		put_y = put_y + 1;
+		NcPrintStr(put_y, 0, (char*)"File Put? (Y)/N", 0);
+		put_y = put_y + 1;
+		NcPrintStr(put_y, 0, (char*)">", 0);
+
+		// Yesでファイルへの書き込みへ
+		c = Nckey();
+		c = toupper(c);
+		if(c == '\0' || c == '\n' || c == 'Y'){
+			if(MainWriteFile(St, ptr) != 0){
+				return 1;
+			}
+		}
+
 		// ファイル名の更新
 		len = (int)strlen(ptr);
 		St->File.Dat = CpppAlloc(St->Pos.FileNum, 0, len);
@@ -405,32 +421,17 @@ int MainFilePut(St_t* St){
 		strncpy(St->File.Dat[St->Pos.FileNum][0], ptr, len);
 		St->File.Dat[St->Pos.FileNum][0][len] = '\0';
 
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)"File Put? (Y)/N", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
-
-		ptr = MainGetStr(put_y, 1, (char*)"\0");
-		if(ptr == NULL){
-			return -1;
-		}
-
-			// Yesでファイルへの書き込みへ
-		if(ptr[0] == '\0' || ptr[0] == '\n' || ArrCmp(ptr, (char*)"Y", 0) == 0){
-			MainWriteFile(St);
-		}
-
 	return 0;
 }
 
 // ファイルへ書き込み
-int MainWriteFile(St_t* St){
+int MainWriteFile(St_t* St, char* fname){
 
 	FILE* fp;
 	int i;
 	int len;
 
-		fp = fopen(St->File.Dat[St->Pos.FileNum][0], "wb");
+		fp = fopen(fname, "wb");
 		if(fp == NULL){
 			return -1;
 		}
