@@ -41,8 +41,8 @@ int MainInit(St_t* St, int argc, char** argv){
 
 	int i;
 	int r;
-	char* nf = (char*)"untitled";
 	int filenum;
+	char* nf = (char*)"untitled";
 
 		NcInit();
 
@@ -72,7 +72,6 @@ int MainInit(St_t* St, int argc, char** argv){
 			if(r < 0){
 				break;
 			}
-			// ファイルが開けていたら次に渡す番号を+1
 			else if(r == 0){
 				filenum = filenum + 1;
 			}
