@@ -42,6 +42,7 @@ int MainInit(St_t* St, int argc, char** argv){
 	int i;
 	int r;
 	char* nf = (char*)"untitled";
+	int filenum;
 
 		NcInit();
 
@@ -62,13 +63,18 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		St->File.Dat = NULL;
 
+		filenum = 0;
 		r = 0;
 		// 引数で渡されたファイルを開く
 		for(i = 1; i < argc; i++){
 
-			r = MainReedFile(St, argv[i], i - 1);
+			r = MainReedFile(St, argv[i], filenum);
 			if(r < 0){
 				break;
+			}
+			// ファイルが開けていたら次に渡す番号を+1
+			else if(r == 0){
+				filenum = filenum + 1;
 			}
 
 		}
