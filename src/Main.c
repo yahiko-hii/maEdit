@@ -43,7 +43,7 @@ int MainInit(St_t* St, int argc, char** argv){
 	int r;
 	char* nf = (char*)"untitled";
 
-		NcInit(St);
+		NcInit();
 
 		St->Dat.Cd = CurDir(argc, argv);
 		if(St->Dat.Cd == NULL){
@@ -59,10 +59,6 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		St->Key.CurLen = (int)strlen(St->C.Cur);
 		St->Key.EolLen = (int)strlen(St->C.Eol);
-
-		if(St->Pos.MaxX > 8){
-			St->Pos.MaxX = (int)(St->Pos.MaxX * 0.9);
-		}
 
 		St->File.Dat = NULL;
 
@@ -916,6 +912,11 @@ int MainPrint(St_t* St){
 		}
 		dat_bottom = St->Pos.DatY + DF_BOTTOM;
 
+		// ターミナルのサイズを取得
+		NcGetmax(St);
+		if(St->Pos.MaxX > 8){
+			St->Pos.MaxX = (int)(St->Pos.MaxX * 0.9);
+		}
 		// ターミナルの出力位置
 		put_y = 0;
 		put_x = 0;

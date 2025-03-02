@@ -3,7 +3,8 @@
 
 #include "./St.h"
 
-int NcInit(St_t* St);
+int NcInit(void);
+void NcGetmax(St_t* St);
 int Nckey(void);
 void NcClear(void);
 void NcCur(int, int);

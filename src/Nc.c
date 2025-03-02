@@ -23,7 +23,7 @@ __MINGW64__
 
 #include "./Nc.h"
 
-int NcInit(St_t* St){
+int NcInit(void){
 
 	static short int state = 0;
 
@@ -38,8 +38,6 @@ int NcInit(St_t* St){
 		// 初期化
 		initscr();
 
-		getmaxyx(stdscr, St->Pos.MaxY, St->Pos.MaxX);
-
 		// 入力バッファを使用しない
 		cbreak();
 
@@ -53,6 +51,10 @@ int NcInit(St_t* St){
 		keypad(stdscr, TRUE);
 
 	return 0;
+}
+// Max サイズ
+void NcGetmax(St_t* St){
+	getmaxyx(stdscr, St->Pos.MaxY, St->Pos.MaxX);
 }
 // キー取得
 int Nckey(void){
