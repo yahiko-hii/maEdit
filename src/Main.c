@@ -53,10 +53,17 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		St->Dat.IntDig = 2;
 
-		St->C.Cur = (char*)"|";
-		St->C.Eol = (char*)"\0";
-		St->C.Dm = (char*)"| ";
-		St->C.Gs = (char*)"-";
+		St->C.Cur[0] = '|';
+		St->C.Cur[1] = '\0';
+
+		St->C.Eol[0] = '\0';
+		St->C.Eol[1] = '\0';
+
+		strncpy(St->C.Dm, "| ", 2);
+		St->C.Dm[2]= '\0';
+
+		St->C.Gs[0]= '-';
+		St->C.Gs[1]= '\0';
 
 		St->Key.CurLen = (int)strlen(St->C.Cur);
 		St->Key.EolLen = (int)strlen(St->C.Eol);
@@ -945,7 +952,7 @@ int MainPrint(St_t* St){
 			NcPrintInt(put_y, put_x, i, St->Dat.IntDig);
 			put_x = St->Dat.IntDig;
 			NcPrintStr(put_y, put_x, (char*)St->C.Dm, 0);
-			put_x = put_x + 2;
+			put_x = (int)(put_x + strlen(St->C.Dm));
 
 			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
 

@@ -11,10 +11,10 @@ struct ST_POS{
 	int MaxX;
 };
 struct ST_C{
-	char* Cur;
-	char* Eol;
-	char* Dm;
-	char* Gs;
+	char Cur[2];
+	char Eol[2];
+	char Dm[3];
+	char Gs[2];
 };
 struct ST_KEY{
 	int CurLen;
