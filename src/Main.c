@@ -898,8 +898,8 @@ char* MainGetStr(int y, int x, char* arg){
 int MainPrint(St_t* St){
 
 	char* text[] = {
-		(char*)"Move:W or S or A or D, Exit:Ctrl+E,　Edit:Enter, Del:Ctrl+X, Repl:R,",
-		(char*)"Open:O, Put:P, Switch:Space or C, List:L,",
+		(char*)"Move:W or S or A or D, Exit:Ctrl+E, Edit:Enter, Del:Ctrl+X, Repl:R,",
+		(char*)"Open:O, Put:P, List:Space or C or L,",
 		NULL
 	};
 	int i;
