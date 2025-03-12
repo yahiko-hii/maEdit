@@ -74,6 +74,8 @@
 #define DF_LS 'L'
 // File Open
 #define DF_OPEN 'O'
+// File Close
+#define DF_CLOSE 'E'
 // File Put
 #define DF_PUT 'P'
 
@@ -86,7 +88,7 @@ int MainInit(St_t* St, int, char**);
 int MainKey(St_t* St);
 
 int MainFileOpen(St_t* St);
-int MainReedFile(St_t* St, char*, int);
+int MainReedFile(St_t* St, char*);
 int MainFilePut(St_t* St);
 int MainWriteFile(St_t* St, char*);
 int MainFileList(St_t* St);

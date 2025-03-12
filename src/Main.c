@@ -41,7 +41,6 @@ int MainInit(St_t* St, int argc, char** argv){
 
 	int i;
 	int r;
-	int filenum;
 	char* nf = (char*)"untitled";
 
 		NcInit();
@@ -70,17 +69,13 @@ int MainInit(St_t* St, int argc, char** argv){
 
 		St->File.Dat = NULL;
 
-		filenum = 0;
 		r = 0;
 		// 引数で渡されたファイルを開く
 		for(i = 1; i < argc; i++){
 
-			r = MainReedFile(St, argv[i], filenum);
+			r = MainReedFile(St, argv[i]);
 			if(r < 0){
 				break;
-			}
-			else if(r == 0){
-				filenum = filenum + 1;
 			}
 
 		}
@@ -119,12 +114,12 @@ int MainInit(St_t* St, int argc, char** argv){
 // キーの処理
 int MainKey(St_t* St){
 
+	int i;
 	int c;
 	int y = 0;
-	int i;
 
-		c = Nckey();
-		c = toupper(c);
+		i = Nckey();
+		c = toupper(i);
 
 		// EXIT
 		if(c == DF_EXIT){
@@ -225,6 +220,21 @@ int MainKey(St_t* St){
 				return -1;
 			}
 		}
+		// 現在のファイルをクローズ
+		else if(c == DF_CLOSE){
+
+			St->File.Dat = CpppAllocDelPp(St->Pos.FileNum);
+			if(St->File.Dat == NULL){
+				return -1;
+			}
+			else if(St->Pos.FileNum > 0){
+				St->Pos.FileNum = St->Pos.FileNum - 1;
+			}
+
+			St->Pos.DatY = 1;
+			St->Pos.DatX = 0;
+
+		}
 		// 置き換え
 		else if(c == DF_RE){
 			if(MainAs(St) < 0){
@@ -263,7 +273,6 @@ int MainFileOpen(St_t* St){
 
 	char* ptr;
 	int r;
-	int pos;
 
 		NcClear();
 
@@ -277,27 +286,8 @@ int MainFileOpen(St_t* St){
 			return 0;
 		}
 
-		if(St->File.Dat == NULL){
-			pos = 0;
-		}
-		else{
-
-			// 既に開いているファイルのリストと比較
-			for(pos = 0; St->File.Dat[pos] != NULL; pos++){
-				if(strcmp(ptr, St->File.Dat[pos][0]) == 0){
-					pos = -1;
-					break;
-				}
-			}
-			// 既に開いてるファイルなら戻る
-			if(pos < 0){
-				return 1;
-			}
-
-		}
-
 		//ファイルを開く
-		r = MainReedFile(St, ptr, pos);
+		r = MainReedFile(St, ptr);
 		ReedfileExit();
 		if(r < 0){
 			return -1;
@@ -307,10 +297,32 @@ int MainFileOpen(St_t* St){
 }
 
 // ファイルから読み込み
-int MainReedFile(St_t* St, char* fname, int pos){
+int MainReedFile(St_t* St, char* fname){
 
 	char* ptr;
 	int line;
+	int pos;
+
+		if(St->File.Dat == NULL){
+			pos = 0;
+		}
+		else{
+
+			// 既に開いているファイルのリストと比較
+			for(pos = 0; St->File.Dat[pos] != NULL; pos++){
+
+				if(strcmp(fname, St->File.Dat[pos][0]) == 0){
+					pos = -1;
+					break;
+				}
+
+			}
+			// 既に開いてるファイルなら戻る
+			if(pos < 0){
+				return 1;
+			}
+
+		}
 
 		ptr = Reedfile(fname, INT_MAX);
 		if(ptr == NULL || ptr[0] == '\0'){
@@ -388,7 +400,7 @@ int MainFilePut(St_t* St){
 	int put_y;
 
 	char* ptr;
-	int len;
+	int i;
 	char c;
 
 		NcClear();
@@ -412,8 +424,8 @@ int MainFilePut(St_t* St){
 		NcPrintStr(put_y, 0, (char*)">", 0);
 
 		// Yesでファイルへの書き込みへ
-		c = Nckey();
-		c = toupper(c);
+		i = Nckey();
+		c = (char)toupper(i);
 		if(c == '\0' || c == '\n' || c == 'Y'){
 			if(MainWriteFile(St, ptr) != 0){
 				return 1;
@@ -421,13 +433,13 @@ int MainFilePut(St_t* St){
 		}
 
 		// ファイル名の更新
-		len = (int)strlen(ptr);
-		St->File.Dat = CpppAlloc(St->Pos.FileNum, 0, len);
+		i = (int)strlen(ptr);
+		St->File.Dat = CpppAlloc(St->Pos.FileNum, 0, i);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
-		strncpy(St->File.Dat[St->Pos.FileNum][0], ptr, len);
-		St->File.Dat[St->Pos.FileNum][0][len] = '\0';
+		strncpy(St->File.Dat[St->Pos.FileNum][0], ptr, i);
+		St->File.Dat[St->Pos.FileNum][0][i] = '\0';
 
 	return 0;
 }
@@ -600,7 +612,7 @@ int MainLF(St_t* St){
 
 		len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]) - St->Pos.DatX;
 
-		St->File.Dat = CpppAllocAddPp(St->Pos.FileNum, St->Pos.DatY + 1, len);
+		St->File.Dat = CpppAllocAddPpp(St->Pos.FileNum, St->Pos.DatY + 1, len);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
@@ -672,7 +684,7 @@ int MainCharDel(St_t* St){
 		St->File.Dat[St->Pos.FileNum][St->Pos.DatY - 1][len0 + len1] = '\0';
 
 		// 現在の場所を開放して後ろを連結
-		St->File.Dat = CpppAllocDelPp(St->Pos.FileNum, St->Pos.DatY);
+		St->File.Dat = CpppAllocDelPpp(St->Pos.FileNum, St->Pos.DatY);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
@@ -899,7 +911,7 @@ int MainPrint(St_t* St){
 
 	char* text[] = {
 		(char*)"Move:W or S or A or D, Exit:Ctrl+E, AddStr:Enter, Del:Ctrl+X, Repl:R,",
-		(char*)"Open:O, Put:P, List:Space or C or L,",
+		(char*)"Open:O, Put:P, Close:E, List:Space or C or L,",
 		NULL
 	};
 	int i;

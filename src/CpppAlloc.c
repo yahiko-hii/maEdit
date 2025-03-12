@@ -159,7 +159,50 @@ static short int CpppAlloc2(int pos0, int pos1, int len){
 	return 0;
 }
 
-char*** CpppAllocAddPp(int pos, int add_pos, int len){
+char*** CpppAllocDelPp(int pos){
+
+	int alloc_size;
+	int line;
+
+		if(Sg_CpppAlloc == NULL){
+			return NULL;
+		}
+		else if(pos < 0){
+			return Sg_CpppAlloc;
+		}
+
+		// サイズのチェック
+		for(alloc_size = 0; Sg_CpppAlloc[alloc_size] != NULL; alloc_size++);
+		if(pos >= alloc_size){
+			return Sg_CpppAlloc;
+		}
+
+		// 最後のファイルを閉じる
+		if(alloc_size <= 1){
+			CpppAllocExit();
+			return NULL;
+		}
+
+		// free
+		for(line = 0; Sg_CpppAlloc[pos][line] != NULL; line++){
+			free(Sg_CpppAlloc[pos][line]);
+		}
+		free(Sg_CpppAlloc[pos]);
+
+		// ポインタの後ろの位置をずらしていく
+		while(1){
+			Sg_CpppAlloc[pos] = Sg_CpppAlloc[pos + 1];
+			if(Sg_CpppAlloc[pos] == NULL){
+				break;
+			}
+			pos = pos + 1;
+		}
+
+	return Sg_CpppAlloc;
+}
+
+
+char*** CpppAllocAddPpp(int pos, int add_pos, int len){
 
 	int alloc_size;
 
@@ -201,7 +244,7 @@ char*** CpppAllocAddPp(int pos, int add_pos, int len){
 	return Sg_CpppAlloc;
 }
 
-char*** CpppAllocDelPp(int pos, int line){
+char*** CpppAllocDelPpp(int pos, int line){
 
 	int alloc_size;
 	int len;
