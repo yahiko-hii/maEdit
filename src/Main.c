@@ -85,7 +85,7 @@ int MainInit(St_t* St, int argc, char** argv){
 			return -1;
 		}
 
-		// ファイルが開けなかった場合、ファイル名のy0と空行y1のメモリを確保しておく
+		// ファイルが開けなかった場合、ファイル名のz0と空行z1のメモリを確保しておく
 		if(St->File.Dat == NULL){
 
 			i = (int)(strlen(St->Dat.Cd) + strlen(nf));
@@ -116,7 +116,7 @@ int MainKey(St_t* St){
 
 	int i;
 	int c;
-	int y = 0;
+	int z = 0;
 
 		i = Nckey();
 		c = toupper(i);
@@ -128,7 +128,7 @@ int MainKey(St_t* St){
 		// UP
 		else if((c == DF_UP || c == DF_ARR_UP) && St->Pos.DatZ > 1){
 			St->Pos.DatZ = St->Pos.DatZ - 1;
-			y = 1;
+			z = 1;
 		}
 		// DOWN
 		else if(
@@ -138,7 +138,7 @@ int MainKey(St_t* St){
 			&& St->File.Dat[St->Pos.FileNum][St->Pos.DatZ + 1] != NULL
 		){
 			St->Pos.DatZ = St->Pos.DatZ + 1;
-			y = 1;
+			z = 1;
 		}
 		// LEFT
 		else if(c == DF_LEFT || c == DF_ARR_LEFT){
@@ -251,7 +251,7 @@ int MainKey(St_t* St){
 		}
 
 		// Z軸移動の場合、配列の長さとマルチバイトの先頭位置を調べる
-		if(y != 0){
+		if(z != 0){
 
 			i = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 			// カーソルXの位置が配列のサイズより大きい場合、配列の最後の位置から探す
@@ -710,7 +710,7 @@ int MainAs(St_t* St){
 
 	short int al;
 
-	int y;
+	int z;
 
 	int i = 0;
 
@@ -789,20 +789,20 @@ int MainAs(St_t* St){
 			return 0;
 		}
 
-		for(y = 1; St->File.Dat[St->Pos.FileNum][y] != NULL; y++){
+		for(z = 1; St->File.Dat[St->Pos.FileNum][z] != NULL; z++){
 
 			// 文字を探す位置
 			i = 0;
 			while(1){
 
 				// 文字検索
-				ptr = ArrSrch(&St->File.Dat[St->Pos.FileNum][y][i], ls[0], al);
+				ptr = ArrSrch(&St->File.Dat[St->Pos.FileNum][z][i], ls[0], al);
 				if(ptr == NULL){
 					break;
 				}
-				pos = (int)(strlen(St->File.Dat[St->Pos.FileNum][y]) - strlen(ptr));
+				pos = (int)(strlen(St->File.Dat[St->Pos.FileNum][z]) - strlen(ptr));
 
-				all_len = (int)strlen(St->File.Dat[St->Pos.FileNum][y]) - ls0_len + ls1_len;
+				all_len = (int)strlen(St->File.Dat[St->Pos.FileNum][z]) - ls0_len + ls1_len;
 				ptr = CpAlloc(all_len);
 				if(ptr == NULL){
 					i = -1;
@@ -810,18 +810,18 @@ int MainAs(St_t* St){
 				}
 				// 見つかった位置まで、置き換える文字、置き換える文字の後から最後まで
 				sprintf(ptr, "%.*s%s%s",
-					pos, St->File.Dat[St->Pos.FileNum][y],
+					pos, St->File.Dat[St->Pos.FileNum][z],
 					ls[1],
-					&St->File.Dat[St->Pos.FileNum][y][pos + ls0_len]
+					&St->File.Dat[St->Pos.FileNum][z][pos + ls0_len]
 				);
 
-				St->File.Dat = CpppAlloc(St->Pos.FileNum, y, all_len);
+				St->File.Dat = CpppAlloc(St->Pos.FileNum, z, all_len);
 				if(St->File.Dat == NULL){
 					i = -1;
 					break;
 				}
-				strncpy(St->File.Dat[St->Pos.FileNum][y], ptr, all_len);
-				St->File.Dat[St->Pos.FileNum][y][all_len] = '\0';
+				strncpy(St->File.Dat[St->Pos.FileNum][z], ptr, all_len);
+				St->File.Dat[St->Pos.FileNum][z][all_len] = '\0';
 
 				// 次の探す位置
 				i = pos + ls1_len;
@@ -842,7 +842,7 @@ int MainAs(St_t* St){
 }
 
 // 文字列の取得
-char* MainGetStr(int y, int x, char* arg){
+char* MainGetStr(int z, int x, char* arg){
 
 	static char* ptr;
 	int pos = 0;
@@ -867,8 +867,8 @@ char* MainGetStr(int y, int x, char* arg){
 		while(1){
 
 			//  出力されている文字をスペースで上書き
-			NcPrintOw(y, x, pos + 1);
-			NcPrintStr(y, x, ptr, 0);
+			NcPrintOw(z, x, pos + 1);
+			NcPrintStr(z, x, ptr, 0);
 
 			c = (char)Nckey();
 
