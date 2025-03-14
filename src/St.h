@@ -4,10 +4,10 @@
 struct ST_POS{
 	int FileNum;
 
-	int DatY;
+	int DatZ;
 	int DatX;
 
-	int MaxY;
+	int MaxZ;
 	int MaxX;
 };
 struct ST_C{

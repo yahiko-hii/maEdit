@@ -103,7 +103,7 @@ int MainInit(St_t* St, int argc, char** argv){
 			St->File.Dat[0][1][0] = '\0';
 
 			St->Pos.FileNum = 0;
-			St->Pos.DatY = 1;
+			St->Pos.DatZ = 1;
 			St->Pos.DatX = 0;
 
 		}
@@ -126,42 +126,42 @@ int MainKey(St_t* St){
 				return 1;
 		}
 		// UP
-		else if((c == DF_UP || c == DF_ARR_UP) && St->Pos.DatY > 1){
-			St->Pos.DatY = St->Pos.DatY - 1;
+		else if((c == DF_UP || c == DF_ARR_UP) && St->Pos.DatZ > 1){
+			St->Pos.DatZ = St->Pos.DatZ - 1;
 			y = 1;
 		}
 		// DOWN
 		else if(
 			(c == DF_DOWN || c == DF_ARR_DOWN)
 			&&
-			St->File.Dat[St->Pos.FileNum][St->Pos.DatY] != NULL
-			&& St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1] != NULL
+			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ] != NULL
+			&& St->File.Dat[St->Pos.FileNum][St->Pos.DatZ + 1] != NULL
 		){
-			St->Pos.DatY = St->Pos.DatY + 1;
+			St->Pos.DatZ = St->Pos.DatZ + 1;
 			y = 1;
 		}
 		// LEFT
 		else if(c == DF_LEFT || c == DF_ARR_LEFT){
 
 			if(St->Pos.DatX > 0){
-				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], St->Pos.DatX - 1, -1);
+				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], St->Pos.DatX - 1, -1);
 				St->Pos.DatX = i;
 			}
-			else if(St->Pos.DatY >= 2){
-				St->Pos.DatY = St->Pos.DatY - 1;
-				St->Pos.DatX = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]);
+			else if(St->Pos.DatZ >= 2){
+				St->Pos.DatZ = St->Pos.DatZ - 1;
+				St->Pos.DatX = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 			}
 
 		}
 		// RIGHT
 		else if(c == DF_RIGHT || c == DF_ARR_RIGHT){
 
-			if(St->Pos.DatX < (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY])){
-				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], St->Pos.DatX + 1, 1);
+			if(St->Pos.DatX < (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ])){
+				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], St->Pos.DatX + 1, 1);
 				St->Pos.DatX = i;
 			}
-			else if(St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1] != NULL){
-				St->Pos.DatY = St->Pos.DatY + 1;
+			else if(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ + 1] != NULL){
+				St->Pos.DatZ = St->Pos.DatZ + 1;
 				St->Pos.DatX = 0;
 			}
 
@@ -183,7 +183,7 @@ int MainKey(St_t* St){
 				return 0;
 			}
 
-			St->Pos.DatY = 1;
+			St->Pos.DatZ = 1;
 			St->Pos.DatX = 0;
 
 		}
@@ -194,14 +194,14 @@ int MainKey(St_t* St){
 				return -1;
 			}
 
-			St->Pos.DatY = 1;
+			St->Pos.DatZ = 1;
 			St->Pos.DatX = 0;
 
 		}
 		// ファイルの切り替え
 		else if(c == DF_FILE_UP && St->Pos.FileNum >= 1){
 			St->Pos.FileNum = St->Pos.FileNum - 1;
-			St->Pos.DatY = 1;
+			St->Pos.DatZ = 1;
 			St->Pos.DatX = 0;
 		}
 		else if(c == DF_FILE_DOWND){
@@ -209,7 +209,7 @@ int MainKey(St_t* St){
 			for(i = 0; St->File.Dat[i] != NULL; i++);
 			if(St->Pos.FileNum < i - 1){
 				St->Pos.FileNum = St->Pos.FileNum + 1;
-				St->Pos.DatY = 1;
+				St->Pos.DatZ = 1;
 				St->Pos.DatX = 0;
 			}
 
@@ -231,7 +231,7 @@ int MainKey(St_t* St){
 				St->Pos.FileNum = St->Pos.FileNum - 1;
 			}
 
-			St->Pos.DatY = 1;
+			St->Pos.DatZ = 1;
 			St->Pos.DatX = 0;
 
 		}
@@ -250,16 +250,16 @@ int MainKey(St_t* St){
 			}
 		}
 
-		// Y軸移動の場合、配列の長さとマルチバイトの先頭位置を調べる
+		// Z軸移動の場合、配列の長さとマルチバイトの先頭位置を調べる
 		if(y != 0){
 
-			i = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]);
+			i = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 			// カーソルXの位置が配列のサイズより大きい場合、配列の最後の位置から探す
 			if(St->Pos.DatX > i){
-				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], i, -1);
+				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], i, -1);
 			}
 			else{
-				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], St->Pos.DatX, -1);
+				i = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], St->Pos.DatX, -1);
 			}
 			St->Pos.DatX = i;
 
@@ -388,7 +388,7 @@ int MainReedFile(St_t* St, char* fname){
 			return -1;
 		}
 
-		St->Pos.DatY = 1;
+		St->Pos.DatZ = 1;
 		St->Pos.DatX = 0;
 
 	return 0;
@@ -397,7 +397,7 @@ int MainReedFile(St_t* St, char* fname){
 // ファイルへ出力確認
 int MainFilePut(St_t* St){
 
-	int put_y;
+	int put_z;
 
 	char* ptr;
 	int i;
@@ -405,12 +405,12 @@ int MainFilePut(St_t* St){
 
 		NcClear();
 
-		put_y = 0;
-		NcPrintStr(put_y, 0, (char*)"Put File Name", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
+		put_z = 0;
+		NcPrintStr(put_z, 0, (char*)"Put File Name", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_y, 1, St->File.Dat[St->Pos.FileNum][0]);
+		ptr = MainGetStr(put_z, 1, St->File.Dat[St->Pos.FileNum][0]);
 		if(ptr == NULL){
 			return -1;
 		}
@@ -418,10 +418,10 @@ int MainFilePut(St_t* St){
 			return 0;
 		}
 
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)"File Put? (Y)/N", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)"File Put? (Y)/N", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)">", 0);
 
 		// Yesでファイルへの書き込みへ
 		i = Nckey();
@@ -558,8 +558,8 @@ int MainAdd(St_t* St){
 
 			str_len = (int)strlen(str);
 
-			if(St->File.Dat[St->Pos.FileNum][St->Pos.DatY] != NULL){
-				dat_len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]);
+			if(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ] != NULL){
+				dat_len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 			}
 			else{
 				dat_len = 0;
@@ -578,9 +578,9 @@ int MainAdd(St_t* St){
 			if(dat_len > 0){
 				// DatXの位置まで、取得したstr、残りの位置から代入
 				sprintf(buf, "%.*s%s%s",
-					St->Pos.DatX, St->File.Dat[St->Pos.FileNum][St->Pos.DatY],
+					St->Pos.DatX, St->File.Dat[St->Pos.FileNum][St->Pos.DatZ],
 					str,
-					&St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX]
+					&St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][St->Pos.DatX]
 				);
 			}
 			else{
@@ -589,13 +589,13 @@ int MainAdd(St_t* St){
 			}
 
 			// 現在の位置にメモリを確保して、連結したbufを代入
-			St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatY, all_len);
+			St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatZ, all_len);
 			if(St->File.Dat == NULL){
 				free(buf);
 				return -1;
 			}
-			strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], buf, all_len);
-			St->File.Dat[St->Pos.FileNum][St->Pos.DatY][all_len] = '\0';
+			strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], buf, all_len);
+			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][all_len] = '\0';
 
 			free(buf);
 
@@ -610,19 +610,19 @@ int MainLF(St_t* St){
 
 	int len;
 
-		len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]) - St->Pos.DatX;
+		len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]) - St->Pos.DatX;
 
-		St->File.Dat = CpppAllocAddPpp(St->Pos.FileNum, St->Pos.DatY + 1, len);
+		St->File.Dat = CpppAllocAddPpp(St->Pos.FileNum, St->Pos.DatZ + 1, len);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
 
-		strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1], &St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX], len);
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatY + 1][len] = '\0';
+		strncpy(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ + 1], &St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][St->Pos.DatX], len);
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatZ + 1][len] = '\0';
 
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatY][St->Pos.DatX] = '\0';
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][St->Pos.DatX] = '\0';
 
-		St->Pos.DatY = St->Pos.DatY + 1;
+		St->Pos.DatZ = St->Pos.DatZ + 1;
 		St->Pos.DatX = 0;
 
 	return 0;
@@ -640,10 +640,10 @@ int MainCharDel(St_t* St){
 
 		if(St->Pos.DatX > 0){
 
-			len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]);
+			len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 
 			// マルチバイトの-1文字の先頭位置
-			pos0 = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatY], St->Pos.DatX - 1, -1);
+			pos0 = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], St->Pos.DatX - 1, -1);
 			// 元の位置との差分
 			diff = St->Pos.DatX - pos0;
 			// 元の位置
@@ -653,43 +653,43 @@ int MainCharDel(St_t* St){
 			St->Pos.DatX = pos0;
 
 			// 位置のスライド
-			while(St->File.Dat[St->Pos.FileNum][St->Pos.DatY][pos1] != '\0'){
-				St->File.Dat[St->Pos.FileNum][St->Pos.DatY][pos0] = St->File.Dat[St->Pos.FileNum][St->Pos.DatY][pos1];
+			while(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][pos1] != '\0'){
+				St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][pos0] = St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][pos1];
 				pos0 = pos0 + 1;
 				pos1 = pos1 + 1;
 			}
 			// 差分の後ろの位置に\0
-			St->File.Dat[St->Pos.FileNum][St->Pos.DatY][len0 - diff] = '\0';
+			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ][len0 - diff] = '\0';
 
 			return 0;
 		}
-		// FileNumの0はファイル名なのでY位置は後ろに移動できない
-		else if(St->Pos.DatY <= 1){
+		// FileNumの0はファイル名なのでZ位置は後ろに移動できない
+		else if(St->Pos.DatZ <= 1){
 			return 0;
 		}
 
-		len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY - 1]);
-		len1 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatY]);
+		len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1]);
+		len1 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 
 		// 上の行の後ろに連結
-		St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatY - 1, len0 + len1);
+		St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatZ - 1, len0 + len1);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
 		strncat(
-			St->File.Dat[St->Pos.FileNum][St->Pos.DatY - 1],
-			St->File.Dat[St->Pos.FileNum][St->Pos.DatY],
+			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1],
+			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ],
 			len1
 		);
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatY - 1][len0 + len1] = '\0';
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1][len0 + len1] = '\0';
 
 		// 現在の場所を開放して後ろを連結
-		St->File.Dat = CpppAllocDelPpp(St->Pos.FileNum, St->Pos.DatY);
+		St->File.Dat = CpppAllocDelPpp(St->Pos.FileNum, St->Pos.DatZ);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
 
-		St->Pos.DatY = St->Pos.DatY - 1;
+		St->Pos.DatZ = St->Pos.DatZ - 1;
 		St->Pos.DatX = len0;
 
 	return 0;
@@ -698,7 +698,7 @@ int MainCharDel(St_t* St){
 // 置き換え
 int MainAs(St_t* St){
 
-	int put_y;
+	int put_z;
 
 	char* ptr;
 
@@ -714,15 +714,15 @@ int MainAs(St_t* St){
 
 	int i = 0;
 
-		put_y = 0;
+		put_z = 0;
 		NcClear();
 
 		// 置き換える対象の文字列の取得
-		NcPrintStr(put_y, 0, (char*)"Src", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
+		NcPrintStr(put_z, 0, (char*)"Src", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_y, 1, (char*)"\0");
+		ptr = MainGetStr(put_z, 1, (char*)"\0");
 		if(ptr == NULL){
 			return -1;
 		}
@@ -737,14 +737,14 @@ int MainAs(St_t* St){
 		strncpy(ls[0], ptr, ls0_len);
 		ls[0][ls0_len] = '\0';
 
-		put_y = put_y + 1;
+		put_z = put_z + 1;
 
 		// 置き換える文字列の取得
-		NcPrintStr(put_y, 0, (char*)"Dst", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
+		NcPrintStr(put_z, 0, (char*)"Dst", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_y, 1, (char*)"\0");
+		ptr = MainGetStr(put_z, 1, (char*)"\0");
 		if(ptr == NULL){
 			CppAllocExit();
 			return -1;
@@ -763,14 +763,14 @@ int MainAs(St_t* St){
 		strncpy(ls[1], ptr, ls1_len);
 		ls[1][ls1_len] = '\0';
 
-		put_y = put_y + 1;
+		put_z = put_z + 1;
 
 		// 大文字小文字を区別するかどうか
-		NcPrintStr(put_y, 0, (char*)"case-insensitive? (Y)/N", 0);
-		put_y = put_y + 1;
-		NcPrintStr(put_y, 0, (char*)">", 0);
+		NcPrintStr(put_z, 0, (char*)"case-insensitive? (Y)/N", 0);
+		put_z = put_z + 1;
+		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_y, 1, (char*)"\0");
+		ptr = MainGetStr(put_z, 1, (char*)"\0");
 		if(ptr == NULL){
 			CppAllocExit();
 			return -1;
@@ -911,12 +911,12 @@ int MainPrint(St_t* St){
 
 	char* text[] = {
 		(char*)"Move:W or S or A or D, Exit:Ctrl+E, AddStr:Enter, Del:Ctrl+X, Repl:R,",
-		(char*)"Open:O, Put:P, Close:E, List:Space or C or L,",
+		(char*)"Open:O, Put:P, Close:E, List:L or C or Space,",
 		NULL
 	};
 	int i;
 
-	int put_y;
+	int put_z;
 	int put_x;
 
 	int dat_top;
@@ -930,11 +930,11 @@ int MainPrint(St_t* St){
 		NcClear();
 
 		// 配列の参照開始位置
-		dat_top = St->Pos.DatY + DF_TOP;
+		dat_top = St->Pos.DatZ + DF_TOP;
 		if(dat_top < 1){
 			dat_top = 1;
 		}
-		dat_bottom = St->Pos.DatY + DF_BOTTOM;
+		dat_bottom = St->Pos.DatZ + DF_BOTTOM;
 
 		// ターミナルのサイズを取得
 		NcGetmax(St);
@@ -942,15 +942,15 @@ int MainPrint(St_t* St){
 			St->Pos.MaxX = (int)(St->Pos.MaxX * 0.9);
 		}
 		// ターミナルの出力位置
-		put_y = 0;
+		put_z = 0;
 		put_x = 0;
 
-		NcPrintStr(put_y, put_x, St->File.Dat[St->Pos.FileNum][0], 0);
-		put_y = put_y + 1;
+		NcPrintStr(put_z, put_x, St->File.Dat[St->Pos.FileNum][0], 0);
+		put_z = put_z + 1;
 		for(i = 0; i < St->Pos.MaxX; i++){
-			NcPrintStr(put_y, i, (char*)St->C.Gs, 0);
+			NcPrintStr(put_z, i, (char*)St->C.Gs, 0);
 		}
-		put_y = put_y + 1;
+		put_z = put_z + 1;
 
 		for(i = dat_top; St->File.Dat[St->Pos.FileNum][i] != NULL; i++){
 
@@ -961,9 +961,9 @@ int MainPrint(St_t* St){
 			put_x = 0;
 
 			// 行番号
-			NcPrintInt(put_y, put_x, i, St->Dat.IntDig);
+			NcPrintInt(put_z, put_x, i, St->Dat.IntDig);
 			put_x = St->Dat.IntDig;
-			NcPrintStr(put_y, put_x, (char*)St->C.Dm, 0);
+			NcPrintStr(put_z, put_x, (char*)St->C.Dm, 0);
 			put_x = (int)(put_x + strlen(St->C.Dm));
 
 			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
@@ -979,7 +979,7 @@ int MainPrint(St_t* St){
 			}
 
 			// 出力位置が現在の位置と同じ場合、カーソルも含める
-			if(i == St->Pos.DatY){
+			if(i == St->Pos.DatZ){
 
 				sprintf(ptr, "%.*s%s%s%s",
 					St->Pos.DatX, St->File.Dat[St->Pos.FileNum][i],
@@ -1006,19 +1006,19 @@ int MainPrint(St_t* St){
 				}
 
 				// 出力する最後の位置を指定して出力する
-				NcPrintStr(put_y, put_x, ptr, cr);
+				NcPrintStr(put_z, put_x, ptr, cr);
 
 				ptr = &ptr[cr];
 				len = len - cr;
 
-				put_y = put_y + 1;
+				put_z = put_z + 1;
 
 			}
 			if(len > 0){
-				NcPrintStr(put_y, put_x, ptr, 0);
+				NcPrintStr(put_z, put_x, ptr, 0);
 			}
 
-			put_y = put_y + 1;
+			put_z = put_z + 1;
 
 		}
 
@@ -1031,11 +1031,11 @@ int MainPrint(St_t* St){
 		put_x = 0;
 		// 区切りと説明テキストを出力
 		for(i = 0; i < St->Pos.MaxX; i++){
-			NcPrintStr(put_y, i, (char*)St->C.Gs, 0);
+			NcPrintStr(put_z, i, (char*)St->C.Gs, 0);
 		}
 		for(i = 0; text[i] != NULL; i++){
-			put_y = put_y + 1;
-			NcPrintStr(put_y, put_x, text[i], 0);
+			put_z = put_z + 1;
+			NcPrintStr(put_z, put_x, text[i], 0);
 		}
 
 	return 0;

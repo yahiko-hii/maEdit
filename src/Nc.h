@@ -4,7 +4,7 @@
 #include "./St.h"
 
 int NcInit(void);
-void NcGetmax(St_t* St);
+void NcGetmax(St_t*);
 int Nckey(void);
 void NcClear(void);
 void NcCur(int, int);

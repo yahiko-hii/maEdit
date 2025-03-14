@@ -54,7 +54,7 @@ int NcInit(void){
 }
 // Max サイズ
 void NcGetmax(St_t* St){
-	getmaxyx(stdscr, St->Pos.MaxY, St->Pos.MaxX);
+	getmaxyx(stdscr, St->Pos.MaxZ, St->Pos.MaxX);
 }
 // キー取得
 int Nckey(void){
@@ -65,26 +65,26 @@ void NcClear(void){
 		clear();
 }
 // カーソル位置を変更
-void NcCur(int y, int x){
-		move(y, x);
+void NcCur(int z, int x){
+		move(z, x);
 }
 // スペースで上書き
-void NcPrintOw(int y, int x, int len){
+void NcPrintOw(int z, int x, int len){
 
 	int i;
 
-			move(y, x);
+			move(z, x);
 
 			//  出力されている文字をスペースで上書き
 			for(i = x; i < x + len; i++){
-				NcPrintStr(y, i, (char*)" ", 0);
+				NcPrintStr(z, i, (char*)" ", 0);
 			}
 
 }
 // 文字列を出力
-void NcPrintStr(int y, int x, char* str, int fmt){
+void NcPrintStr(int z, int x, char* str, int fmt){
 
-		NcCur(y, x);
+		NcCur(z, x);
 
 		if(fmt == 0){
 			addstr(str);
@@ -95,9 +95,9 @@ void NcPrintStr(int y, int x, char* str, int fmt){
 
 }
 // 数字を出力
-void NcPrintInt(int y, int x, int i, int fmt){
+void NcPrintInt(int z, int x, int i, int fmt){
 
-		NcCur(y, x);
+		NcCur(z, x);
 
 		if(fmt == 0){
 			printw("%d", i);
