@@ -83,7 +83,7 @@ mkdir -p "${V_CUR_DIR}/tmp/o";
 mkdir -p /tmp/$$/;
 cat "${V_SRC_DIR}/"*"${V_SRC_EXT}" > /tmp/$$/srcall.txt;
 
-# 引数の.hが存在したら変更
+# 引数2の.hが存在したら変更
 FuncCheck(){
 
 	grep -i "${1}" /tmp/$$/srcall.txt > /tmp/$$/grep.txt;
@@ -98,6 +98,17 @@ FuncCheck(){
 
 	return 0;
 };
+
+# GLFW?
+#FuncCheck \
+#"glfw[0-9].h" "${V_COMP}" "${V_SRC_EXT}" \
+#"-Wextra -Werror -lGLEW -lGLU -lGL -lglfw" \
+#"${V_OP_ETS}";
+
+# GTK?
+#FuncCheck "gtk.h" "${V_COMP}" "${V_SRC_EXT}" \
+#"$(pkg-config --cflags gtk4) $(pkg-config --libs gtk4)" \
+#"${V_OP_ETS}";
 
 # ncurses?
 FuncCheck 'ncurses.h' "${V_COMP}" "${V_SRC_EXT}" \
@@ -143,10 +154,9 @@ do
 	if [ "${V_OP_ASM}" = '0' ]
 	then
 
-		# .oファイルが存在しないもしくはタイムスタンプが違う
-		if [ ! -e ${V_CUR_DIR}/tmp/o/${V_FN}.o ] ||
-			[ ${V_A} -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ] ||
-			[ ${V_SRC_DIR}/${V_FN}.h -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ]
+		# .oが存在しない、もしくはソースか.hどっちかのタイムスタンプが違う
+		if [ ! -e ${V_CUR_DIR}/tmp/o/${V_FN}.o ]　||
+			[ ${V_A} -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ]　|| [ ${V_SRC_DIR}/${V_FN}.h -nt ${V_CUR_DIR}/tmp/o/${V_FN}.o ]
 		then
 
 			echo "${V_CUR_DIR}/tmp/o/${V_FN}.o";
@@ -175,10 +185,20 @@ fi;
 ####
 if [ -f "${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}" ]
 then
+
 	echo "\n----\npost-processing\n";
-	# パーミッション変更
-	echo "chmod -R 550 \"${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}\"";
-	chmod -R 550 "${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}";
+
+	# 実行ファイルのパーミッション変更
+	chmod -R 750 "${V_OP_DIR}/${V_OP_FN}${V_OP_ETS}";
+
+	# 実行シェルスクリプトの作成
+	echo '#!/bin/sh' > ${V_OP_DIR}/${V_OP_FN}.sh;
+	echo 'V_CUR_DIR=$(dirname "$(readlink -f "$0")");' >> ${V_OP_DIR}/${V_OP_FN}.sh;
+	echo 'cd "${V_CUR_DIR}";' >> ${V_OP_DIR}/${V_OP_FN}.sh;
+	echo "\${V_CUR_DIR}/${V_OP_FN}${V_OP_ETS} \$@;" >> ${V_OP_DIR}/${V_OP_FN}.sh;
+	echo 'exit;' >> ${V_OP_DIR}/${V_OP_FN}.sh;
+	chmod -R 750 "${V_OP_DIR}/${V_OP_FN}.sh";
+
 fi;
 
 echo "\n----\n";
@@ -187,3 +207,4 @@ exit;
 
 # ヘッダ ファイルの場所
 # /usr/include/
+
