@@ -1,0 +1,4 @@
+isalpha(c) != 0
+isdigit(c) != 0
+isalnum(c) != 0
+
