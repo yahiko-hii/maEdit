@@ -10,6 +10,7 @@
 #include "./UTF8_Byte.h"
 #include "./Arr.h"
 #include "./NumbDgt.h"
+#include "./Tok.h"
 
 #include "./Nc.h"
 
@@ -97,7 +98,8 @@ int MainAdd(St_t* St);
 int MainLF(St_t* St);
 int MainCharDel(St_t* St);
 int MainAs(St_t* St);
-char* MainGetStr(int, int, char*);
+char* MainGetStr(St_t*, int, int, char*, int);
+int MainTok(St_t*, int, int, char**, int);
 
 int MainPrint(St_t* St);
 

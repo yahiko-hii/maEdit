@@ -73,11 +73,10 @@ void NcPrintOw(int z, int x, int len){
 
 	int i;
 
-			move(z, x);
-
 			//  出力されている文字をスペースで上書き
 			for(i = x; i < x + len; i++){
-				NcPrintStr(z, i, (char*)" ", 0);
+				move(z, i);
+				addstr(" ");
 			}
 
 }

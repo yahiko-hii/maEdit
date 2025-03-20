@@ -245,7 +245,7 @@ int MainKey(St_t* St){
 		else if(c == DF_IP){
 			// 出力されている文字をスペースで上書き
 			NcPrintOw(0, 0, (int)strlen(St->File.Dat[St->Pos.FileNum][0]));
-			if(MainAdd(St) != 0){
+			if(MainAdd(St) < 0){
 				return -1;
 			}
 		}
@@ -278,7 +278,7 @@ int MainFileOpen(St_t* St){
 
 		NcPrintStr(0, 0, (char*)"Open File Name\n>", 0);
 
-		ptr = MainGetStr(1, 1, (char*)"\0");
+		ptr = MainGetStr(St, 1, 1, (char*)"\0", 1);
 		if(ptr == NULL){
 			return -1;
 		}
@@ -410,7 +410,7 @@ int MainFilePut(St_t* St){
 		put_z = put_z + 1;
 		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_z, 1, St->File.Dat[St->Pos.FileNum][0]);
+		ptr = MainGetStr(St, put_z, 1, St->File.Dat[St->Pos.FileNum][0], 1);
 		if(ptr == NULL){
 			return -1;
 		}
@@ -419,7 +419,7 @@ int MainFilePut(St_t* St){
 		}
 
 		put_z = put_z + 1;
-		NcPrintStr(put_z, 0, (char*)"File Put? (Y)/N", 0);
+		NcPrintStr(put_z, 0, (char*)"File Put? (Y)/n", 0);
 		put_z = put_z + 1;
 		NcPrintStr(put_z, 0, (char*)">", 0);
 
@@ -506,7 +506,7 @@ int MainFileList(St_t* St){
 		NcPrintStr(0, 0, (char*)"Input Fine number", 0);
 		NcPrintStr(1, 0, (char*)">", 0);
 
-		ptr = MainGetStr(1, 1, (char*)"\0");
+		ptr = MainGetStr(St, 1, 1, (char*)"\0", 1);
 		if(ptr == NULL){
 			return -1;
 		}
@@ -541,7 +541,8 @@ int MainAdd(St_t* St){
 			NcPrintStr(0, 0, (char*)">", 0);
 
 			// 文字列の取得
-			str = MainGetStr(0, 1, (char*)"\0");
+			str = MainGetStr(St, 0, 1, (char*)"\0", 0);
+			CppAllocExit();
 			if(str == NULL){
 				return -1;
 			}
@@ -722,7 +723,7 @@ int MainAs(St_t* St){
 		put_z = put_z + 1;
 		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_z, 1, (char*)"\0");
+		ptr = MainGetStr(St, put_z, 1, (char*)"\0", 1);
 		if(ptr == NULL){
 			return -1;
 		}
@@ -744,7 +745,7 @@ int MainAs(St_t* St){
 		put_z = put_z + 1;
 		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_z, 1, (char*)"\0");
+		ptr = MainGetStr(St, put_z, 1, (char*)"\0", 1);
 		if(ptr == NULL){
 			CppAllocExit();
 			return -1;
@@ -766,11 +767,11 @@ int MainAs(St_t* St){
 		put_z = put_z + 1;
 
 		// 大文字小文字を区別するかどうか
-		NcPrintStr(put_z, 0, (char*)"case-insensitive? (Y)/N", 0);
+		NcPrintStr(put_z, 0, (char*)"case-insensitive? (Y)/n", 0);
 		put_z = put_z + 1;
 		NcPrintStr(put_z, 0, (char*)">", 0);
 
-		ptr = MainGetStr(put_z, 1, (char*)"\0");
+		ptr = MainGetStr(St, put_z, 1, (char*)"\0", 1);
 		if(ptr == NULL){
 			CppAllocExit();
 			return -1;
@@ -842,11 +843,20 @@ int MainAs(St_t* St){
 }
 
 // 文字列の取得
-char* MainGetStr(int z, int x, char* arg){
+char* MainGetStr(St_t* St, int z, int x, char* arg, int f){
 
 	static char* ptr;
 	int pos = 0;
 	int c;
+
+	char** ls;
+	int ls_num ;
+
+	int len_ptr;
+	int len_ls;
+	int len_all;
+
+		ls_num = -1;
 
 		if(arg == NULL){
 			pos = 0;
@@ -876,10 +886,28 @@ char* MainGetStr(int z, int x, char* arg){
 				break;
 			}
 			else if(c == '\n'){
-				if(pos == 0){
+
+				/* トークンリストから文字列の利用を確定 */
+				if(ls_num >= 0){
+
+					len_ptr = (int)strlen(ptr);
+					len_ls = (int)strlen(ls[ls_num]);
+					len_all = len_ptr + len_ls;
+
+					ptr = CpAlloc(len_all);
+					if(ptr == NULL){
+						break;
+					}
+
+					memmove(ptr + len_ptr, ls[ls_num], len_ls);
+					ptr[len_all] = '\0';
+
+				}
+				else if(pos == 0){
 					ptr[0] = '\n';
 					ptr[1] = '\0';
 				}
+
 				break;
 			}
 			//  文字削除
@@ -900,10 +928,68 @@ char* MainGetStr(int z, int x, char* arg){
 
 			}
 
+			/* トークンを利用しない場合コンテニュー */
+			if(f != 0){
+				continue;
+			}
+			/* トークンを探す */
+			ls = Tok(St->Dat.Cd, ptr);
+			if(ls == NULL){
+				continue;
+			}
+			/* Ctrl+Nでトークンリストの位置を移動 */
+			if(c == DF_CTRL_N){
+				ls_num = ls_num + 1;
+			}
+			ls_num = MainTok(St, z, x, ls, ls_num);
+
+		}
+		if(ptr == NULL){
+			return NULL;
 		}
 
-	// メモリ確保に失敗してたらNULL
 	return ptr;
+}
+
+int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
+
+	int i;
+	int len = 0;
+	int dgt;
+
+		z = z + 1;
+		NcPrintOw(z, 0, St->Pos.MaxX);
+		NcPrintStr(z, x + 1, "Next: Ctrl+N", 0);
+
+		z = z + 1;
+		for(i = 0; ls[i] != NULL; i++){
+
+			len = (int)strlen(ls[i]);
+			NcPrintOw(z, 0, len + 4);
+
+			if(i == ls_num){
+				NcPrintStr(z, x, ">", 0);
+				NcPrintStr(z, x + 1, ls[i], 0);
+			}
+			else{
+				NcPrintStr(z, x + 1, ls[i], 0);
+			}
+
+			z = z + 1;
+		}
+		NcPrintOw(z, 0, len + 4);
+
+		// 使用する数字の最大桁数を更新
+		dgt = NumbDgt((unsigned int)i);
+		if(dgt > St->Dat.IntDig){
+			St->Dat.IntDig = dgt;
+		}
+
+		if(ls_num >= 0 && ls_num < i){
+			return ls_num;
+		}
+
+	return -1;
 }
 
 // 出力
