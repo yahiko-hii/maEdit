@@ -8,7 +8,7 @@ The ncurses library is provided under the X11 License (MIT License). For more de
 
 ----
 
-maEdit
+m.a.Edit
 TUI (text user interface) Editor
 
 ----
