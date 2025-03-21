@@ -149,7 +149,12 @@ static int TokDir(char* path){
 				break;
 			}
 			strncpy(Sg_TokLs[Sg_TokLs_Pos], ptr, len);
-			Sg_TokLs[Sg_TokLs_Pos][len] = '\0';
+			if(Sg_TokLs[Sg_TokLs_Pos][len - 1] == '\r'){
+				Sg_TokLs[Sg_TokLs_Pos][len - 1] = '\0';
+			}
+			else{
+				Sg_TokLs[Sg_TokLs_Pos][len] = '\0';
+			}
 
 			Sg_TokLs_Pos = Sg_TokLs_Pos + 1;
 			ptr = &ptr[len + 1];

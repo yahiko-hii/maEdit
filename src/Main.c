@@ -354,7 +354,7 @@ int MainReedFile(St_t* St, char* fname){
 		while(1){
 
 			// 改行もしくは最後の位置
-			if(ptr[pos] == '\n' || (ptr[pos] == '\0' && pos > 0)){
+			if(ptr[pos] == '\r' || ptr[pos] == '\n' || (ptr[pos] == '\0' && pos > 0)){
 
 				// メモリを確保
 				St->File.Dat = CpppAlloc(St->Pos.FileNum, line, pos);
