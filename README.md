@@ -9,7 +9,7 @@ The ncurses library is provided under the X11 License (MIT License). For more de
 ----
 
 maEdit
-TUI(テキストユーザインタフェース)のエディタです
+TUI (text user interface) Editor
 
 ----
 
@@ -25,22 +25,23 @@ yum -y install ncurses-devel;
 # compile
 sh ./comp.sh
 
-./comp.shのディレクトリに.outファイルを作成されます
+# run
+./maedit.sh
 
 ----
 
 # rm
-
-# シンボリックリンクを作成していたら削除
 unlink /usr/local/bin/maedit
-
-# ディレクトリを削除
 rm -r -f ./maEdit
 
 ----
 
-メール
+mail
 contact.em@mainaddr.com
+
+web
+https://www.mainaddr.com/
+https://blog.mainaddr.com/
 
 ----
 
@@ -106,4 +107,3 @@ ncursesのライセンスに合わせて変更
 入力している語句の関連語が見つかれば表示するように変更
 
 ----
-
