@@ -5,4 +5,5 @@ include <limits.h>
 include <stdlib.h>
 include <string.h>
 include <threads.h>
+ifndef IG_PD\n#define IG_PD\n#endif
 

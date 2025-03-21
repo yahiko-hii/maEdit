@@ -1,4 +1,4 @@
-isalpha(c) != 0
-isdigit(c) != 0
-isalnum(c) != 0
+alpha(c) != 0
+digit(c) != 0
+alnum(c) != 0
 
