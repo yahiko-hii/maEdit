@@ -23,16 +23,16 @@ yum -y install gcc;
 yum -y install ncurses-devel;
 
 # compile
-sh ./comp.sh
+sh ./comp.sh;
 
 # run
-./maedit.sh
+./maedit.sh;
 
 ----
 
 # rm
-unlink /usr/local/bin/maedit
-rm -r -f ./maEdit
+unlink /usr/local/bin/maedit;
+rm -r -f ./maEdit;
 
 ----
 
