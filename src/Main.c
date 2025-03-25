@@ -1004,7 +1004,8 @@ int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
 int MainPrint(St_t* St){
 
 	char* text[] = {
-		(char*)"Move:W or S or A or D, Exit:Ctrl+E, AddStr:Enter, Del:Ctrl+X, Repl:R, Sort:T,",
+		(char*)"Move:W or S or A or D, Exit:Ctrl+E",
+		(char*)"AddStr:Enter, Del:Ctrl+X, Repl:R, Sort:T,",
 		(char*)"Open:O, Put:P, Close:E, List:L or C or Space,",
 		NULL
 	};
