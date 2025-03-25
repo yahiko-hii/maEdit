@@ -9,6 +9,7 @@ The ncurses library is provided under the X11 License (MIT License). For more de
 ----
 
 m.a.Edit
+
 TUI (text user interface) Editor
 
 ----
@@ -106,4 +107,8 @@ ncursesのライセンスに合わせて変更
 2025/03/19
 入力している語句の関連語が見つかれば表示するように変更
 
+2025/03/25
+挿入ソートで文字コード順の並び替えをできるように。0-9 → A-Z → a-z
+
 ----
+
