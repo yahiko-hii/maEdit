@@ -11,6 +11,7 @@
 #include "./Arr.h"
 #include "./NumbDgt.h"
 #include "./Tok.h"
+#include "./SortPp.h"
 
 #include "./Nc.h"
 
@@ -70,6 +71,9 @@
 
 // Replace
 #define DF_RE 'R'
+
+// ソート than
+#define DF_SORT 'T'
 
 // List
 #define DF_LS 'L'

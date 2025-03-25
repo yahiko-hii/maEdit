@@ -34,7 +34,7 @@ char* ArrSrch(char* str0, char* str1, short int al){
 			while(str0[find0] != '\0' && str1[find1] != '\0'){
 
 				// 比較
-				if(ArrChar(str0[find0], str1[find1], al) == 1){
+				if(ArrChar(str0[find0], str1[find1], al) != 0){
 					break;
 				}
 
@@ -65,45 +65,56 @@ short int ArrCmp(char* str0, char* str1, short int al){
 
 	size_t pos;
 
-	short int state = 0;
-
-		if(str0 == NULL || str1 == NULL){
-			return 1;
-		}
+	short int r = 0;
 
 		str0_len = strlen(str0);
 		str1_len = strlen(str1);
 		// 長さが違うから一致ではない
-		if(str0_len != str1_len){
+		if(str0_len < str1_len){
+			return -1;
+		}
+		else if(str0_len > str1_len){
 			return 1;
 		}
 
 		for(pos = 0; str0[pos]; pos++){
 
 			// 比較
-			if(ArrChar(str0[pos], str1[pos], al) == 1){
-				state = 1;
+			r = ArrChar(str0[pos], str1[pos], al);
+			if(r != 0){
 				break;
 			}
 
 		}
 
-	return state;
+	return r;
 }
 
 static short int ArrChar(char c0, char c1, short int al){
 
-		// alが0なら大文字に変換して比較。違う文字なら1を返す
+	int i0;
+	int i1;
+
+		// alが0なら大文字に変換して比較。違う文字なら1か-1を返す
 		if(al == 0){
 
-			if(toupper((unsigned char)c0) != toupper((unsigned char)c1)){
+			i0 =  toupper((unsigned char)c0);
+			i1 =  toupper((unsigned char)c1);
+
+			if(i0 < i1){
+				return -1;
+			}
+			else if(i0 > i1){
 				return 1;
 			}
 
 		}
 		else{
 
-			if(c0 != c1){
+			if((unsigned char)c0 < (unsigned char)c1){
+				return -1;
+			}
+			else if((unsigned char)c0 > (unsigned char)c1){
 				return 1;
 			}
 

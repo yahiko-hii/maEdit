@@ -241,6 +241,14 @@ int MainKey(St_t* St){
 				return -1;
 			}
 		}
+		// ソート
+		else if(c == DF_SORT){
+			St->File.Dat[St->Pos.FileNum] = SortPp(St->File.Dat[St->Pos.FileNum], 1);
+			if(St->File.Dat[St->Pos.FileNum] == NULL){
+				return -1;
+			}
+			z = 1;
+		}
 		// キー入力
 		else if(c == DF_IP){
 			// 出力されている文字をスペースで上書き
@@ -996,7 +1004,7 @@ int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
 int MainPrint(St_t* St){
 
 	char* text[] = {
-		(char*)"Move:W or S or A or D, Exit:Ctrl+E, AddStr:Enter, Del:Ctrl+X, Repl:R,",
+		(char*)"Move:W or S or A or D, Exit:Ctrl+E, AddStr:Enter, Del:Ctrl+X, Repl:R, Sort:T,",
 		(char*)"Open:O, Put:P, Close:E, List:L or C or Space,",
 		NULL
 	};
