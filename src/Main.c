@@ -857,8 +857,8 @@ char* MainGetStr(St_t* St, int z, int x, char* arg, int f){
 	int pos = 0;
 	int c;
 
-	char** ls;
-	int ls_num ;
+	char** ls = NULL;
+	int ls_num;
 
 	int len_ptr;
 	int len_ls;
@@ -896,7 +896,7 @@ char* MainGetStr(St_t* St, int z, int x, char* arg, int f){
 			else if(c == '\n'){
 
 				/* トークンリストから文字列の利用を確定 */
-				if(ls_num >= 0){
+				if(ls != NULL && ls_num >= 0){
 
 					len_ptr = (int)strlen(ptr);
 					len_ls = (int)strlen(ls[ls_num]);
@@ -967,7 +967,7 @@ int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
 
 		z = z + 1;
 		NcPrintOw(z, 0, St->Pos.MaxX);
-		NcPrintStr(z, x + 1, "Next: Ctrl+N", 0);
+		NcPrintStr(z, x + 1, (char*)"Next: Ctrl+N", 0);
 
 		z = z + 1;
 		for(i = 0; ls[i] != NULL; i++){
@@ -976,7 +976,7 @@ int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
 			NcPrintOw(z, 0, len + 4);
 
 			if(i == ls_num){
-				NcPrintStr(z, x, ">", 0);
+				NcPrintStr(z, x, (char*)">", 0);
 				NcPrintStr(z, x + 1, ls[i], 0);
 			}
 			else{
