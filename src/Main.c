@@ -235,6 +235,12 @@ int MainKey(St_t* St){
 			St->Pos.DatX = 0;
 
 		}
+		//  検索
+		else if(c == DF_FIND){
+			if(MainFind(St) < 0){
+				return -1;
+			}
+		}
 		// 置き換え
 		else if(c == DF_RE){
 			if(MainAs(St) < 0){
@@ -704,6 +710,61 @@ int MainCharDel(St_t* St){
 	return 0;
 }
 
+// 検索
+int MainFind(St_t* St){
+
+	int z = 0;
+	char* ptr0;
+	char* ptr1;
+	int i;
+
+		NcPrintOw(0, 0, St->Pos.MaxX);
+		NcPrintStr(0, 0, (char*)">", 1);
+
+		ptr0 = MainGetStr(St, z, 1, (char*)"\0", 1);
+		if(ptr0 == NULL){
+			return -1;
+		}
+		else if(ptr0[0] == '\0' || ptr0[0] == '\n'){
+			return 1;
+		}
+
+		for(i = 0; i <= 1; i++){
+
+			// 検索開始位置は1回目は現在位置
+			if(i == 0){
+				z = St->Pos.DatZ;
+			}
+			// 一度最後まで終わったら最初から
+			else{
+				z = 0;
+			}
+
+			while(St->File.Dat[St->Pos.FileNum][z] != NULL){
+
+				// 最初の位置の1つ前の行まで来たら見つからなかった
+				if(z == St->Pos.DatZ - 1){
+					i = 2;
+					break;
+				}
+
+				ptr1 = ArrSrch(St->File.Dat[St->Pos.FileNum][z], ptr0, 0);
+				if(ptr1 != NULL){
+					St->Pos.DatZ = z;
+					St->Pos.DatX = (int)(strlen(St->File.Dat[St->Pos.FileNum][z]) - strlen(ptr1));
+					i = 2;
+					break;
+				}
+
+				z = z + 1;
+
+			}
+
+		}
+
+	return 0;
+}
+
 // 置き換え
 int MainAs(St_t* St){
 
@@ -1005,7 +1066,7 @@ int MainPrint(St_t* St){
 
 	char* text[] = {
 		(char*)"Move:W or S or A or D, Exit:Ctrl+E",
-		(char*)"AddStr:Enter, Del:Ctrl+X, Repl:R, Sort:T,",
+		(char*)"AddStr:Enter, Del:Ctrl+X, Find:F, Repl:R, Sort:T,",
 		(char*)"Open:O, Put:P, Close:E, List:L or C or Space,",
 		NULL
 	};

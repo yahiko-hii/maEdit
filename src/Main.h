@@ -69,6 +69,9 @@
 // 文字削除
 #define DF_DEL DF_CTRL_X
 
+// 検索
+#define DF_FIND 'F'
+
 // Replace
 #define DF_RE 'R'
 
@@ -101,6 +104,7 @@ int MainFileList(St_t* St);
 int MainAdd(St_t* St);
 int MainLF(St_t* St);
 int MainCharDel(St_t* St);
+int MainFind(St_t*);
 int MainAs(St_t* St);
 char* MainGetStr(St_t*, int, int, char*, int);
 int MainTok(St_t*, int, int, char**, int);
