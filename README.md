@@ -44,6 +44,10 @@ web
 https://www.mainaddr.com/
 https://blog.mainaddr.com/
 
+source
+https://github.com/yahiko-hii/maEdit
+https://drive.google.com/drive/folders/1pMpJ7PMb0aqgRy-pf7gbNtpFEkd6HLot
+
 ----
 
 2025/02/03
