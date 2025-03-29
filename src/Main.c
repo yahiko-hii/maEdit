@@ -714,6 +714,7 @@ int MainCharDel(St_t* St){
 int MainFind(St_t* St){
 
 	int z = 0;
+	int x;
 	char* ptr0;
 	char* ptr1;
 	int i;
@@ -729,6 +730,7 @@ int MainFind(St_t* St){
 			return 1;
 		}
 
+		x = St->Pos.DatX;
 		for(i = 0; i <= 1; i++){
 
 			// 検索開始位置は1回目は現在位置
@@ -748,12 +750,16 @@ int MainFind(St_t* St){
 					break;
 				}
 
-				ptr1 = ArrSrch(St->File.Dat[St->Pos.FileNum][z], ptr0, 0);
+				ptr1 = ArrSrch(&St->File.Dat[St->Pos.FileNum][z][x], ptr0, 0);
 				if(ptr1 != NULL){
 					St->Pos.DatZ = z;
 					St->Pos.DatX = (int)(strlen(St->File.Dat[St->Pos.FileNum][z]) - strlen(ptr1));
+					St->Pos.DatX = St->Pos.DatX + (int)strlen(ptr0);
 					i = 2;
 					break;
+				}
+				else{
+					x = 0;
 				}
 
 				z = z + 1;
