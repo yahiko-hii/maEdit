@@ -24,15 +24,29 @@ char** Tok(char* cd, char* src){
 	char str[DF_TOK_MAX + 1];
 	char* path;
 
-	char* dir = (char*)"dat/str/";
+	char* dir[] = {
+		(char*)"dat/C/",
+		NULL
+	};
+	size_t len;
+	size_t dir_len;
+	int i;
 
 	int r = 0;
 
 		Sg_TokLs = NULL;
 		Sg_TokLs_Pos = 0;
 
+		dir_len = 0;
+		for(i = 0; dir[i] != NULL; i++){
+			len = strlen(dir[i]);
+			if(dir_len < len){
+				dir_len = len;
+			}
+		}
+
 		/* カレントディレクトリ + ディレクトリ + 最大strlen + 区切り分と\0 */
-		path = (char*)malloc(sizeof(char*) * (strlen(cd) + DF_TOK_MAX + strlen(dir) + 4));
+		path = (char*)malloc(sizeof(char*) * (strlen(cd) + dir_len + DF_TOK_MAX + 8));
 		if(path == NULL){
 			return NULL;
 		}
@@ -64,7 +78,7 @@ char** Tok(char* cd, char* src){
 
 			/* strのファイルが開けたら文字列をlsに代入 */
 			if(str[0] != '\0'){
-				sprintf(path, "%s%s%s", cd, dir, str);
+				sprintf(path, "%s%s%s", cd, dir[0], str);
 				r = TokDir(path);
 				if(r < 0){
 					break;

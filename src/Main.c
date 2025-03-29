@@ -39,6 +39,7 @@ int main(int argc, char* argv[]){
 // 初期化
 int MainInit(St_t* St, int argc, char** argv){
 
+	size_t len;
 	int i;
 	int r;
 	char* nf = (char*)"untitled";
@@ -88,13 +89,16 @@ int MainInit(St_t* St, int argc, char** argv){
 		// ファイルが開けなかった場合、ファイル名のz0と空行z1のメモリを確保しておく
 		if(St->File.Dat == NULL){
 
-			i = (int)(strlen(St->Dat.Cd) + strlen(nf));
-			St->File.Dat = CpppAlloc(0, 0, i);
+			len = strlen(St->Dat.Cd) + strlen(nf);
+			if(len > INT_MAX){
+				return -1;
+			}
+			St->File.Dat = CpppAlloc(0, 0, (int)len);
 			if(St->File.Dat == NULL){
 				return -1;
 			}
 			sprintf(St->File.Dat[0][0], "%s%s", St->Dat.Cd, nf);
-			St->File.Dat[0][0][i] = '\0';
+			St->File.Dat[0][0][len] = '\0';
 
 			St->File.Dat = CpppAlloc(0, 1, 1);
 			if(St->File.Dat == NULL){
@@ -463,7 +467,7 @@ int MainWriteFile(St_t* St, char* fname){
 
 	FILE* fp;
 	int i;
-	int len;
+	size_t len;
 
 		fp = fopen(fname, "wb");
 		if(fp == NULL){
@@ -472,8 +476,8 @@ int MainWriteFile(St_t* St, char* fname){
 
 		for(i = 1; St->File.Dat[St->Pos.FileNum][i] != NULL; i++){
 
-			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
-			if((int)fwrite(St->File.Dat[St->Pos.FileNum][i], sizeof(char), len, fp) != len){
+			len = strlen(St->File.Dat[St->Pos.FileNum][i]);
+			if(fwrite(St->File.Dat[St->Pos.FileNum][i], sizeof(char), len, fp) != len){
 				break;
 			}
 			else if(St->File.Dat[St->Pos.FileNum][i + 1] != NULL){
@@ -547,8 +551,8 @@ int MainFileList(St_t* St){
 int MainAdd(St_t* St){
 
 	char* str;
-	int str_len;
-	int dat_len;
+	size_t str_len;
+	size_t dat_len;
 	int all_len;
 	char* buf;
 
@@ -571,19 +575,20 @@ int MainAdd(St_t* St){
 				return 0;
 			}
 
-			str_len = (int)strlen(str);
+			str_len = strlen(str);
 
 			if(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ] != NULL){
-				dat_len = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
+				dat_len = strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 			}
 			else{
 				dat_len = 0;
 			}
 
+			/* 文字列を繋げたらINT_MAXをオーバーしないかチェック */
 			if(INT_MAX - dat_len <= str_len){
 				return -1;
 			}
-			all_len = str_len + dat_len;
+			all_len = (int)(str_len + dat_len);
 
 			buf = (char*)malloc(sizeof(char) * all_len + 1);
 			if(buf == NULL){
@@ -615,7 +620,7 @@ int MainAdd(St_t* St){
 			free(buf);
 
 			// カーソルの位置を変更
-			St->Pos.DatX = St->Pos.DatX + str_len;
+			St->Pos.DatX = St->Pos.DatX + (int)str_len;
 
 	return 0;
 }
@@ -646,16 +651,17 @@ int MainLF(St_t* St){
 // 1文字削除
 int MainCharDel(St_t* St){
 
-	int len0;
-	int len1;
+	size_t len0;
+	size_t len1;
+	size_t len_all;
 
-	int pos0;
-	int pos1;
-	int diff;
+	size_t pos0;
+	size_t pos1;
+	size_t diff;
 
 		if(St->Pos.DatX > 0){
 
-			len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
+			len0 = strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
 
 			// マルチバイトの-1文字の先頭位置
 			pos0 = UTF8_ByteFl(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ], St->Pos.DatX - 1, -1);
@@ -683,11 +689,15 @@ int MainCharDel(St_t* St){
 			return 0;
 		}
 
-		len0 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1]);
-		len1 = (int)strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
+		len0 = strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1]);
+		len1 = strlen(St->File.Dat[St->Pos.FileNum][St->Pos.DatZ]);
+		len_all = len0 + len1;
+		if(len_all > INT_MAX){
+			return -1;
+		}
 
 		// 上の行の後ろに連結
-		St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatZ - 1, len0 + len1);
+		St->File.Dat = CpppAlloc(St->Pos.FileNum, St->Pos.DatZ - 1, (int)len_all);
 		if(St->File.Dat == NULL){
 			return -1;
 		}
@@ -696,7 +706,7 @@ int MainCharDel(St_t* St){
 			St->File.Dat[St->Pos.FileNum][St->Pos.DatZ],
 			len1
 		);
-		St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1][len0 + len1] = '\0';
+		St->File.Dat[St->Pos.FileNum][St->Pos.DatZ - 1][len_all] = '\0';
 
 		// 現在の場所を開放して後ろを連結
 		St->File.Dat = CpppAllocDelPpp(St->Pos.FileNum, St->Pos.DatZ);
@@ -778,16 +788,17 @@ int MainAs(St_t* St){
 	char* ptr;
 
 	char** ls;
-	int ls0_len;
-	int ls1_len;
-	int all_len;
-	int pos;
+	size_t ls0_len;
+	size_t ls1_len;
+	size_t all_len;
+	size_t pos;
 
 	short int al;
 
 	int z;
 
-	int i = 0;
+	size_t  i = 0;
+	int r = 0;
 
 		put_z = 0;
 		NcClear();
@@ -804,8 +815,11 @@ int MainAs(St_t* St){
 		else if(ptr[0] == '\0' || ptr[0] == '\n'){
 			return 0;
 		}
-		ls0_len = (int)strlen(ptr);
-		ls = CppAlloc(0, ls0_len);
+		ls0_len = strlen(ptr);
+		if(ls0_len > INT_MAX){
+			return -1;
+		}
+		ls = CppAlloc(0, (int)ls0_len);
 		if(ls == NULL){
 			return -1;
 		}
@@ -829,9 +843,12 @@ int MainAs(St_t* St){
 			ls1_len = 0;
 		}
 		else{
-			ls1_len = (int)strlen(ptr);
+			ls1_len = strlen(ptr);
+			if(ls1_len > INT_MAX){
+				return -1;
+			}
 		}
-		ls = CppAlloc(1, ls1_len);
+		ls = CppAlloc(1, (int)ls1_len);
 		if(ls == NULL){
 			return -1;
 		}
@@ -875,24 +892,29 @@ int MainAs(St_t* St){
 				if(ptr == NULL){
 					break;
 				}
-				pos = (int)(strlen(St->File.Dat[St->Pos.FileNum][z]) - strlen(ptr));
+				pos = strlen(St->File.Dat[St->Pos.FileNum][z]) - strlen(ptr);
 
-				all_len = (int)strlen(St->File.Dat[St->Pos.FileNum][z]) - ls0_len + ls1_len;
-				ptr = CpAlloc(all_len);
+				all_len = strlen(St->File.Dat[St->Pos.FileNum][z]) - ls0_len + ls1_len;
+				if(all_len > INT_MAX){
+					r = -1;
+					break;
+				}
+
+				ptr = CpAlloc((int)all_len);
 				if(ptr == NULL){
-					i = -1;
+					r = -1;
 					break;
 				}
 				// 見つかった位置まで、置き換える文字、置き換える文字の後から最後まで
 				sprintf(ptr, "%.*s%s%s",
-					pos, St->File.Dat[St->Pos.FileNum][z],
+					(int)pos, St->File.Dat[St->Pos.FileNum][z],
 					ls[1],
 					&St->File.Dat[St->Pos.FileNum][z][pos + ls0_len]
 				);
 
-				St->File.Dat = CpppAlloc(St->Pos.FileNum, z, all_len);
+				St->File.Dat = CpppAlloc(St->Pos.FileNum, z, (int)all_len);
 				if(St->File.Dat == NULL){
-					i = -1;
+					r = -1;
 					break;
 				}
 				strncpy(St->File.Dat[St->Pos.FileNum][z], ptr, all_len);
@@ -903,7 +925,7 @@ int MainAs(St_t* St){
 
 			}
 
-			if(i < 0){
+			if(r < 0){
 				break;
 			}
 
@@ -913,7 +935,7 @@ int MainAs(St_t* St){
 
 		St->Pos.DatX = 0;
 
-	return i;
+	return r;
 }
 
 // 文字列の取得
@@ -1084,8 +1106,8 @@ int MainPrint(St_t* St){
 	int dat_bottom;
 
 	char* ptr;
-	int len;
-	int all_len;
+	size_t len;
+	size_t all_len;
 	int cr = 0;
 
 		NcClear();
@@ -1127,14 +1149,15 @@ int MainPrint(St_t* St){
 			NcPrintStr(put_z, put_x, (char*)St->C.Dm, 0);
 			put_x = (int)(put_x + strlen(St->C.Dm));
 
-			len = (int)strlen(St->File.Dat[St->Pos.FileNum][i]);
+			len = strlen(St->File.Dat[St->Pos.FileNum][i]);
 
-			if((INT_MAX - len) <= (St->Key.CurLen + St->Key.EolLen)){
+			all_len = len + St->Key.CurLen + St->Key.EolLen;
+			if(all_len > INT_MAX){
 				break;
 			}
-			all_len = len + St->Key.CurLen + St->Key.EolLen;
+
 			// 確保されているメモリ < 指定された長さならメモリが再確保される。
-			ptr = CpAlloc(all_len);
+			ptr = CpAlloc((int)all_len);
 			if(ptr == NULL){
 				break;
 			}
@@ -1158,7 +1181,7 @@ int MainPrint(St_t* St){
 			}
 
 			// CRのポイントで改行しつつ出力
-			while(len > St->Pos.MaxX){
+			while((int)len > St->Pos.MaxX){
 
 				// マルチバイトでの現在の文字の先頭位置
 				cr = UTF8_ByteFl(ptr, St->Pos.MaxX, -1);
