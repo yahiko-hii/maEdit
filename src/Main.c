@@ -737,8 +737,8 @@ int MainFind(St_t* St){
 
 			while(St->File.Dat[St->Pos.FileNum][z] != NULL){
 
-				// 最初の位置の1つ前の行まで来たら抜ける
-				if(z == St->Pos.DatZ - 1){
+				// 1周して最初の行まで来たら抜ける
+				if(i != 0 && z == St->Pos.DatZ){
 					i = 2;
 					break;
 				}
