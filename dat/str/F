@@ -1,0 +1,4 @@
+read(buf, sizeof(char), 1, fp)
+write(buf, sizeof(char), 1, fp)
+ILE* fp = fopen("./f.txt", "wb");fclose(fp);
+

@@ -1,0 +1,5 @@
+ncpy(dst, src, len)
+ncat(dst, src, len)
+ncmp(dst, src, len) == 0
+len(str)
+
