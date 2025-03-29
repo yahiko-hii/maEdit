@@ -1040,7 +1040,7 @@ int MainTok(St_t* St, int z, int x, char** ls, int ls_num){
 		for(i = 0; ls[i] != NULL; i++){
 
 			len = (int)strlen(ls[i]);
-			NcPrintOw(z, 0, len + 4);
+			NcPrintOw(z, 0, len + 8);
 
 			if(i == ls_num){
 				NcPrintStr(z, x, (char*)">", 0);

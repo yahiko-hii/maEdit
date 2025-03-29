@@ -36,7 +36,6 @@ char** Tok(char* cd, char* src){
 		if(path == NULL){
 			return NULL;
 		}
-
 		path[0] = '\0';
 		str[0] = '\0';
 
@@ -52,14 +51,16 @@ char** Tok(char* cd, char* src){
 				r = -1;
 				break;
 			}
-			strncpy(ch, &src[src_pos], byte_len);
+			else if(byte_len == 1){
+				ch[0] = toupper(src[src_pos]);
+			}
+			else{
+				strncpy(ch, &src[src_pos], byte_len);
+			}
 			ch[byte_len] = '\0';
 
-			/* 文字処理 */
-			if(TokStr(str, DF_TOK_MAX, ch, byte_len, ord_byte_len) == NULL){
-				r = -1;
-				break;
-			}
+			/* 文字連結 */
+			TokStr(str, DF_TOK_MAX, ch, byte_len, ord_byte_len);
 
 			/* strのファイルが開けたら文字列をlsに代入 */
 			if(str[0] != '\0'){
