@@ -739,7 +739,7 @@ int MainFind(St_t* St){
 			}
 			// 一度最後まで終わったら最初から
 			else{
-				z = 0;
+				z = 1;
 			}
 
 			while(St->File.Dat[St->Pos.FileNum][z] != NULL){
