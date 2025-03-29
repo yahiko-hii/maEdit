@@ -730,21 +730,14 @@ int MainFind(St_t* St){
 			return 1;
 		}
 
+		i = 0;
+		z = St->Pos.DatZ;
 		x = St->Pos.DatX;
-		for(i = 0; i <= 1; i++){
-
-			// 検索開始位置は1回目は現在位置
-			if(i == 0){
-				z = St->Pos.DatZ;
-			}
-			// 一度最後まで終わったら最初から
-			else{
-				z = 1;
-			}
+		while(1){
 
 			while(St->File.Dat[St->Pos.FileNum][z] != NULL){
 
-				// 最初の位置の1つ前の行まで来たら見つからなかった
+				// 最初の位置の1つ前の行まで来たら抜ける
 				if(z == St->Pos.DatZ - 1){
 					i = 2;
 					break;
@@ -765,6 +758,13 @@ int MainFind(St_t* St){
 				z = z + 1;
 
 			}
+
+			i = i + 1;
+			if(i >= 2){
+				break;
+			}
+
+			z = 1;
 
 		}
 
