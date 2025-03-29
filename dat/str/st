@@ -1,2 +1,0 @@
-ruct ST{int I};typedef struct ST St_t;
-
