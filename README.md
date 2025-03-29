@@ -1,13 +1,5 @@
 ----
 
-This program uses the ncurses library, which is licensed under the X11 License.
-
-Copyright 2025 yahiko hii
-
-The ncurses library is provided under the X11 License (MIT License). For more details, see the LICENSE file in this distribution.
-
-----
-
 m.a.Edit
 
 TUI (text user interface) Editor
@@ -34,6 +26,14 @@ sh ./comp.sh;
 # rm
 unlink /usr/local/bin/maedit;
 rm -r -f ./maEdit;
+
+----
+
+This program uses the ncurses library, which is licensed under the X11 License.
+
+Copyright 2025 yahiko hii
+
+The ncurses library is provided under the X11 License (MIT License). For more details, see the LICENSE file in this distribution.
 
 ----
 
@@ -116,7 +116,13 @@ ncursesのライセンスに合わせて変更
 
 2025/03/28
 検索ができるように変更
+
+2025/03/29
+検索後のカーソルの位置を変更
 トークンを探す処理を大文字で扱うように変更
+
+2025/03/30
+長い文字列を連結したら確保したメモリのサイズをオーバするのを修正
 
 ----
 
