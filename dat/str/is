@@ -1,4 +1,0 @@
-alpha(c) != 0
-digit(c) != 0
-alnum(c) != 0
-
