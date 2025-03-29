@@ -713,16 +713,16 @@ int MainCharDel(St_t* St){
 // 検索
 int MainFind(St_t* St){
 
-	int z = 0;
-	int x;
 	char* ptr0;
 	char* ptr1;
+	int z;
+	int x;
 	int i;
 
 		NcPrintOw(0, 0, St->Pos.MaxX);
 		NcPrintStr(0, 0, (char*)">", 1);
 
-		ptr0 = MainGetStr(St, z, 1, (char*)"\0", 1);
+		ptr0 = MainGetStr(St, 0, 1, (char*)"\0", 1);
 		if(ptr0 == NULL){
 			return -1;
 		}
@@ -763,6 +763,7 @@ int MainFind(St_t* St){
 			}
 
 			z = 1;
+			x = 0;
 
 		}
 
