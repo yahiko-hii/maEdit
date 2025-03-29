@@ -751,11 +751,9 @@ int MainFind(St_t* St){
 					i = 2;
 					break;
 				}
-				else{
-					x = 0;
-				}
 
 				z = z + 1;
+				x = 0;
 
 			}
 
